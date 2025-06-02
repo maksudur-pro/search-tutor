@@ -69,7 +69,7 @@ const Home = () => {
                 height="208"
                 decoding="async"
                 className="floating img-shadow max-w-[9.5rem] rounded-br-[8rem] sm:max-w-full"
-                src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/banners/05.png"
+                src="/img1.jpg"
               />
             </div>
           </div>
