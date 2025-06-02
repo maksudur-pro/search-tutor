@@ -1,6 +1,8 @@
 import React from "react";
 import TuitionType from "../../Component/TuitionType/TuitionType";
 import ReviewGuardian from "../../Component/ReviewGuardian/ReviewGuardian";
+import ReviewTeacher from "../../Component/ReviewTeacher/ReviewTeacher";
+import HowItWorks from "../../Component/HowItWorks";
 
 const Home = () => {
   return (
@@ -77,6 +79,7 @@ const Home = () => {
         </div>
       </div>
       <TuitionType></TuitionType>
+      <ReviewTeacher></ReviewTeacher>
       <ReviewGuardian></ReviewGuardian>
     </>
   );
