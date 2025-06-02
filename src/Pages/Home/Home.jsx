@@ -40,7 +40,7 @@ const Home = () => {
                 height="208"
                 decoding="async"
                 className="img-shadow floating max-w-[9.5rem] rounded-tl-[8rem] sm:max-w-full"
-                src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/banners/01.png"
+                src="/img1.jpg"
               />
               <img
                 alt="Home Tutors & Tuitions"
@@ -49,7 +49,7 @@ const Home = () => {
                 height="160"
                 decoding="async"
                 className="floating2 img-shadow max-w-[8.6rem] rounded sm:max-w-full"
-                src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/banners/02.png"
+                src="/img2.jpg"
               />
             </div>
             <div className="mt-3 flex items-start gap-3">
@@ -60,7 +60,7 @@ const Home = () => {
                 height="160"
                 decoding="async"
                 className="floating2 img-shadow max-w-[8.6rem] rounded sm:max-w-full"
-                src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/banners/04.png"
+                src="img3.jpg"
               />
               <img
                 alt="Home Tutors & Tuitions"

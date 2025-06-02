@@ -4,17 +4,17 @@ const TuitionType = () => {
   const tuitions = [
     {
       icon: "total_apply.png",
-      count: "406k",
+      count: "100k",
       label: "Active Tutors",
     },
     {
       icon: "total_jobs.png",
-      count: "2k",
+      count: "1k",
       label: "Live Tuition Jobs",
     },
     {
       icon: "total_happy.png",
-      count: "153k",
+      count: "100k",
       label: "Happy Students",
     },
     {
@@ -95,7 +95,7 @@ const TuitionType = () => {
                 key={index}
                 className={`flex h-fit gap-6 rounded-2xl border border-primary p-4 transition-all duration-200 ease-in-out hover:border-2 hover:bg-white ${
                   index === 4
-                    ? "md:col-span-2 justify-center w-full mx-auto"
+                    ? "justify-center mx-auto"
                     : "md:h-[9.5rem] lg:gap-9"
                 }`}>
                 <img
