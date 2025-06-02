@@ -54,11 +54,11 @@ const TuitionType = () => {
 
   return (
     <div className="relative pb-10 md:pb-20">
-      <div className="absolute left-0 top-12 size-full bg-[#F2F5FC]"></div>
+      <div className="absolute left-0 top-12 w-full h-[95%] bg-[#F2F5FC]"></div>
 
       <div className="relative z-20 mx-auto w-full  px-4 lg:max-w-[60rem] xl:max-w-[71.25rem]">
         {/* Counter Section */}
-        <div className="counter-shadow w-full rounded-3xl bg-indigo-500 ">
+        <div className="counter-shadow w-full rounded-3xl bg-indigo-500 mt-5">
           <div className="px-6 pb-8 pt-10 md:px-12 xl:px-20">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
               {tuitions.map((item, idx) => (

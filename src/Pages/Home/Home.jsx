@@ -1,5 +1,6 @@
 import React from "react";
 import TuitionType from "../../Component/TuitionType/TuitionType";
+import ReviewGuardian from "../../Component/ReviewGuardian/ReviewGuardian";
 
 const Home = () => {
   return (
@@ -76,6 +77,7 @@ const Home = () => {
         </div>
       </div>
       <TuitionType></TuitionType>
+      <ReviewGuardian></ReviewGuardian>
     </>
   );
 };
