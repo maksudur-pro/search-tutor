@@ -1,4 +1,4 @@
-const HowToOrderCard = ({ image, title, description }) => {
+const HowToWorkCard = ({ image, title, description }) => {
   return (
     <div className="md:w-[45%]  flex items-center gap-4 p-4 backdrop-blur-md border-[1px] rounded-lg howWork z-10 mx-auto md:mx-0">
       <div className="left">
@@ -12,4 +12,4 @@ const HowToOrderCard = ({ image, title, description }) => {
   );
 };
 
-export default HowToOrderCard;
+export default HowToWorkCard;
