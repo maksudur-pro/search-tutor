@@ -46,3 +46,10 @@
     transform: translateY(-10px);
   }
 }
+
+.howWork {
+  border: 1px solid #0675c159;
+  border-radius: 15px;
+  box-shadow: 0 3px 11px 0 #0675c159;
+  transition: 0.2s ease-in-out;
+}

@@ -2,7 +2,7 @@ import React from "react";
 import TuitionType from "../../Component/TuitionType/TuitionType";
 import ReviewGuardian from "../../Component/ReviewGuardian/ReviewGuardian";
 import ReviewTeacher from "../../Component/ReviewTeacher/ReviewTeacher";
-import HowItWorks from "../../Component/HowItWorks";
+import HowToOrder from "../../Component/HowToOrder/HowToOrder";
 
 const Home = () => {
   return (
@@ -80,6 +80,7 @@ const Home = () => {
       </div>
       <TuitionType></TuitionType>
       <ReviewTeacher></ReviewTeacher>
+      <HowToOrder></HowToOrder>
       <ReviewGuardian></ReviewGuardian>
     </>
   );
