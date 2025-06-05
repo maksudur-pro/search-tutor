@@ -15,12 +15,12 @@ const TutorJobCard = ({ job }) => {
             </h3>
           </Link>
 
-          <div className="mb-6 flex items-center gap-8 text-sm">
-            <p>
+          <div className="mb-6 flex items-center gap-8 ">
+            <p className="text-[12px] lg:text-sm">
               Job ID : <span className="font-semibold">{job.id}</span>
             </p>
-            <div className="h-4  bg-[#8c8484]" />
-            <p>
+
+            <p className="text-[12px] lg:text-sm">
               Posted Date : <span className="font-semibold">{job.date}</span>
             </p>
           </div>
