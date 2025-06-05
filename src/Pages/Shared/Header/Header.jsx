@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const navOption = (
@@ -8,13 +9,15 @@ const Header = () => {
       </li>
 
       <li>
-        <a>Job Board</a>
+        <Link to={"/job-list"}>Job Board</Link>
       </li>
     </>
   );
 
   return (
-    <div className="bg-[#F2F5FC] shadow-md">
+    <div
+      className="bg-[#F2F5FC]"
+      style={{ boxShadow: "0 8px 6px -6px #0675c140" }}>
       <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem]">
         <div className="navbar ">
           <div className="flex-1">

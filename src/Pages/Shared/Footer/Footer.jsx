@@ -29,7 +29,9 @@ const Footer = () => {
             <h6 className="font-semibold text-lg">Social Links</h6>
             <ul className="flex flex-wrap items-center gap-2 md:justify-start md:gap-4">
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -45,7 +47,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -61,7 +65,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -77,7 +83,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -93,7 +101,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -109,7 +119,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -127,7 +139,9 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a href="/" target="_blank">
+                <a
+                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -143,6 +157,39 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
+            <h2 className="text-xl font-bold text-white md:text-left lg:text-justify">
+              Join Our Community
+            </h2>
+            <div className="mt-2 flex items-center gap-3  md:flex-row md:items-center">
+              <a
+                href="https://www.facebook.com/share/1EzcCG7TKe/"
+                target="_blank">
+                <img
+                  alt="Home Tutors &amp; Tuitions"
+                  loading="lazy"
+                  width="122"
+                  height="50"
+                  decoding="async"
+                  data-nimg="1"
+                  src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/icon/Tutor_Community.svg"
+                  className="text-transparent"
+                />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EzcCG7TKe/"
+                target="_blank">
+                <img
+                  alt="Home Tutors &amp; Tuitions"
+                  loading="lazy"
+                  width="122"
+                  height="50"
+                  decoding="async"
+                  data-nimg="1"
+                  src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/icon/Guardians_Community.svg"
+                  className="text-transparent"
+                />
+              </a>
+            </div>
           </nav>
         </footer>
       </div>
