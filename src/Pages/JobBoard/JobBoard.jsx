@@ -157,7 +157,7 @@ const JobBoard = () => {
             </div>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 p-4 py-0 lg:py-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 px-4 py-4 lg:py-8">
           {fakeJobs.map((job, index) => (
             <TutorJobCard key={index} job={job} />
           ))}
