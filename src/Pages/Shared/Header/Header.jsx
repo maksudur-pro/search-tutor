@@ -5,7 +5,7 @@ const Header = () => {
   const navOption = (
     <>
       <li>
-        <a>Home</a>
+        <Link to={"/"}>Home</Link>
       </li>
 
       <li>
@@ -21,12 +21,14 @@ const Header = () => {
       <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem]">
         <div className="navbar ">
           <div className="flex-1">
+            <Link to={"/"}>
+              <img
+                className="w-36 md:w-[11.1rem]"
+                src="/search-tutor.png"
+                alt=""
+              />
+            </Link>
             {/* <a className="btn btn-ghost normal-case text-xl">daisyUI</a> */}
-            <img
-              className="w-36 md:w-[11.1rem]"
-              src="/search-tutor.png"
-              alt=""
-            />
           </div>
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1 font-medium text-[17px]">
