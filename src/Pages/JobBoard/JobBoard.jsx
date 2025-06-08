@@ -9,7 +9,7 @@ const JobBoard = () => {
       date: "Jun 05, 2025",
       type: "Home Tutoring",
       salary: 6000,
-      subjects: ["Higher Maths", "Chemistry", "Biology", "Physics"],
+      subjects: ["Higher Maths"],
       location: "Banasree, Dhaka",
       gender: "Female",
     },
@@ -29,7 +29,7 @@ const JobBoard = () => {
       date: "Jun 03, 2025",
       type: "Home Tutoring",
       salary: 7000,
-      subjects: ["English", "History", "Economics"],
+      subjects: ["English"],
       location: "Gulshan, Dhaka",
       gender: "Male",
     },
@@ -39,7 +39,7 @@ const JobBoard = () => {
       date: "Jun 05, 2025",
       type: "Home Tutoring",
       salary: 6000,
-      subjects: ["Higher Maths", "Chemistry", "Biology", "Physics"],
+      subjects: ["Biology", "Physics"],
       location: "Banasree, Dhaka",
       gender: "Female",
     },
@@ -59,7 +59,7 @@ const JobBoard = () => {
       date: "Jun 03, 2025",
       type: "Home Tutoring",
       salary: 7000,
-      subjects: ["English", "History", "Economics"],
+      subjects: ["Economics"],
       location: "Gulshan, Dhaka",
       gender: "Male",
     },
@@ -69,7 +69,7 @@ const JobBoard = () => {
       date: "Jun 05, 2025",
       type: "Home Tutoring",
       salary: 6000,
-      subjects: ["Higher Maths", "Chemistry", "Biology", "Physics"],
+      subjects: ["Physics"],
       location: "Banasree, Dhaka",
       gender: "Female",
     },
@@ -89,7 +89,7 @@ const JobBoard = () => {
       date: "Jun 03, 2025",
       type: "Home Tutoring",
       salary: 7000,
-      subjects: ["English", "History", "Economics"],
+      subjects: ["English", "History"],
       location: "Gulshan, Dhaka",
       gender: "Male",
     },
@@ -157,7 +157,7 @@ const JobBoard = () => {
             </div>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 px-4 py-4 lg:py-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
           {fakeJobs.map((job, index) => (
             <TutorJobCard key={index} job={job} />
           ))}
