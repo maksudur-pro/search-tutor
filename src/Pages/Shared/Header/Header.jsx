@@ -36,7 +36,11 @@ const Header = () => {
             </ul>
           </div>
           <div className="">
-            <a className="btn px-8 py-2 bg-indigo-500 text-white">Sign In</a>
+            <Link
+              to={"/sign-in"}
+              className="btn px-8 py-2 bg-indigo-500 text-white">
+              Sign In
+            </Link>
             <div className="dropdown">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">
                 <svg
