@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../providers/AuthProvider";
 
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logOut()
+      .then(() => {})
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  };
+
   const navOption = (
     <>
       <li>
@@ -36,11 +48,20 @@ const Header = () => {
             </ul>
           </div>
           <div className="">
-            <Link
-              to={"/signin"}
-              className="btn px-8 py-2 bg-indigo-500 text-white">
-              Sign In
-            </Link>
+            {user ? (
+              <Link
+                onClick={handleLogout}
+                className="btn px-8 py-2 bg-indigo-500 text-white">
+                Logout
+              </Link>
+            ) : (
+              <Link
+                to={"/signin"}
+                className="btn px-8 py-2 bg-indigo-500 text-white">
+                Sign In
+              </Link>
+            )}
+
             <div className="dropdown">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">
                 <svg
