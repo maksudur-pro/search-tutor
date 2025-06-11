@@ -1,18 +1,36 @@
-const Signup = () => {
-  //   const [formData, setFormData] = useState({
-  //     name: "",
-  //     gender: "",
-  //     phoneNumber: "",
-  //     email: "",
-  //     city: "",
-  //     location: "",
-  //     password: "",
-  //     confirmPassword: "",
-  //   });
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const Signup = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const name = form.name.value;
+    const gender = form.gender.value;
+    const phoneNumber = form.phoneNumber.value;
+    const email = form.email.value;
+    const city = form.city.value;
+    const location = form.location.value;
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
     // Handle form submission
+    console.log(
+      name,
+      gender,
+      phoneNumber,
+      email,
+      city,
+      location,
+      password,
+      confirmPassword
+    );
   };
 
   return (
@@ -26,6 +44,7 @@ const Signup = () => {
               Name <span className="text-red-500">*</span>
             </label>
             <input
+              required
               placeholder="Rafi Chowdhury"
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="text"
@@ -43,6 +62,7 @@ const Signup = () => {
                   type="radio"
                   name="gender"
                   value="male"
+                  required
                 />
                 Male
               </label>
@@ -69,6 +89,7 @@ const Signup = () => {
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="text"
               name="phoneNumber"
+              required
             />
           </div>
           <div className="md:w-1/2">
@@ -80,6 +101,7 @@ const Signup = () => {
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="email"
               name="email"
+              required
             />
           </div>
         </div>
@@ -94,6 +116,7 @@ const Signup = () => {
               name="city"
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="text"
+              required
             />
           </div>
           <div className="md:w-1/2">
@@ -105,22 +128,30 @@ const Signup = () => {
               name="location"
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="text"
+              required
             />
           </div>
         </div>
 
         <div className="mt-8 flex flex-col gap-8 md:flex-row">
-          <div className="md:w-1/2">
+          <div className="md:w-1/2 relative">
             <label className="text-lg">
               Password <span className="text-red-500">*</span>
             </label>
             <input
               placeholder="********"
-              className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
-              type="password"
+              className="w-full border-b border-black/50 py-2 pr-10 focus:border-b-2 focus:outline-none"
+              type={showPassword ? "text" : "password"}
               name="password"
+              required
             />
+            <span
+              className="absolute right-3 top-10 cursor-pointer text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
           </div>
+
           <div className="md:w-1/2">
             <label className="text-lg">
               Confirm Password <span className="text-red-500">*</span>
@@ -130,6 +161,7 @@ const Signup = () => {
               className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
               type="password"
               name="confirmPassword"
+              required
             />
           </div>
         </div>
