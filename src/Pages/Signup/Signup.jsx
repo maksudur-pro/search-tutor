@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { AuthContext } from "../../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const { createUser } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleRegister = (event) => {
     event.preventDefault();
     const form = event.target;
     const name = form.name.value;
@@ -31,12 +35,23 @@ const Signup = () => {
       password,
       confirmPassword
     );
+
+    createUser(email, password)
+      .then((result) => {
+        const loggedUser = result.user;
+        navigate("/");
+        console.log(loggedUser);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
   };
 
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10 p-4">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleRegister}
         className="mt-0 w-full gap-4 rounded-2xl border border-[rgba(6,53,85,0.16)] bg-white px-5 py-8 text-black md:mt-5 md:px-7">
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="md:w-1/2">
