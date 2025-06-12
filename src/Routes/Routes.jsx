@@ -5,6 +5,8 @@ import JobBoard from "../Pages/JobBoard/JobBoard";
 import SignIn from "../Pages/SignIn/SignIn";
 import Signup from "../Pages/Signup/Signup";
 import Profile from "../Pages/Profile/Profile";
+import PublicRoute from "./PublicRoute/PublicRoute";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +23,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/signin",
-        element: <SignIn />,
+        element: (
+          <PublicRoute>
+            <SignIn />
+          </PublicRoute>
+        ),
       },
       {
         path: "/signup",
@@ -29,7 +35,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
       },
     ],
   },

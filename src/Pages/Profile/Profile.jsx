@@ -21,7 +21,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 shadow-lg mt-10 rounded-xl border">
+    <div className="max-w-md mx-auto p-4 shadow-lg my-56 rounded-xl border">
       <h1 className="text-2xl font-bold mb-6 text-center">Profile Section</h1>
       <p>
         <strong>Name:</strong> {user.name}
