@@ -25,7 +25,7 @@ const Header = () => {
       </li>
       {user && (
         <li>
-          <Link>Profile</Link>
+          <Link to={"/profile"}>Profile</Link>
         </li>
       )}
       {user && (

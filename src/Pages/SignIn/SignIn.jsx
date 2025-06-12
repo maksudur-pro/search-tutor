@@ -16,18 +16,28 @@ const SignIn = () => {
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
+
     signIn(email, password)
       .then((result) => {
         const user = result.user;
-        navigate(from, { replace: true });
-        console.log(user);
+        const uid = user.uid;
+
+        //  Fetch full user data from your MongoDB backend
+        fetch(`http://localhost:5000/users/${uid}`)
+          .then((res) => res.json())
+          .then((userData) => {
+            console.log("Full user data:", userData);
+
+            navigate(from, { replace: true }); // Redirect
+          })
+          .catch((err) => {
+            console.error("Failed to load MongoDB user:", err);
+          });
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);
       });
-
-    // console.log(email, password);
   };
 
   return (
