@@ -23,7 +23,7 @@ const SignIn = () => {
         const uid = user.uid;
 
         //  Fetch full user data from your MongoDB backend
-        fetch(`http://localhost:5000/users/${uid}`)
+        fetch(`https://search-tutor-server.vercel.app/users/${uid}`)
           .then((res) => res.json())
           .then((userData) => {
             console.log("Full user data:", userData);
