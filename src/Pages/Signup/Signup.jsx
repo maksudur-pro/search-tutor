@@ -25,22 +25,49 @@ const Signup = () => {
       return;
     }
     // Handle form submission
-    console.log(
-      name,
-      gender,
-      phoneNumber,
-      email,
-      city,
-      location,
-      password,
-      confirmPassword
-    );
+    // console.log(
+    //   name,
+    //   gender,
+    //   phoneNumber,
+    //   email,
+    //   city,
+    //   location,
+    //   password,
+    //   confirmPassword
+    // );
 
     createUser(email, password)
       .then((result) => {
         const loggedUser = result.user;
-        navigate("/");
-        console.log(loggedUser);
+        const uid = loggedUser.uid;
+
+        // Prepare user data
+        const userData = {
+          uid,
+          name,
+          gender,
+          phone: phoneNumber,
+          email,
+          city,
+          location,
+        };
+
+        // Send to MongoDB backend
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("User saved to MongoDB:", data);
+            navigate("/"); // Redirect after saving
+          })
+          .catch((error) => {
+            console.error("Error saving user to DB:", error);
+          });
       })
       .catch((error) => {
         const errorMessage = error.message;
