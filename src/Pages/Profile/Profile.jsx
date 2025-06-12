@@ -21,27 +21,94 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 shadow-lg my-56 rounded-xl border">
-      <h1 className="text-2xl font-bold mb-6 text-center">Profile Section</h1>
-      <p>
-        <strong>Name:</strong> {user.name}
-      </p>
-      <p>
-        <strong>Gender:</strong> {user.gender}
-      </p>
-      <p>
-        <strong>Phone:</strong> {user.phone}
-      </p>
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
-      <p>
-        <strong>City:</strong> {user.city}
-      </p>
-      <p>
-        <strong>Location:</strong> {user.location}
-      </p>
-    </div>
+    <>
+      <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10 p-4">
+        <form className="mt-0 w-full gap-4 rounded-2xl border border-[rgba(6,53,85,0.16)] bg-white px-5 py-8 text-black md:mt-5 md:px-7">
+          <div className="flex flex-col gap-8 md:flex-row">
+            <div className="md:w-1/2">
+              <label className="text-lg">
+                Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                readOnly
+                placeholder={user.name}
+                className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                type="text"
+                name="name"
+              />
+            </div>
+            <div className="md:w-1/2">
+              <p className="text-lg">
+                Gender <span className="text-red-500">*</span>
+              </p>
+              <div className="mt-3 flex gap-7">
+                <input
+                  readOnly
+                  placeholder={user.gender}
+                  className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                  type="text"
+                  name="name"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-8 md:flex-row">
+            <div className="md:w-1/2">
+              <label className="text-lg">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                placeholder={user.phone}
+                className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                type="text"
+                name="phoneNumber"
+                readOnly
+              />
+            </div>
+            <div className="md:w-1/2">
+              <label className="text-lg">
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                placeholder={user.email}
+                className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                type="email"
+                name="email"
+                readOnly
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-8 md:flex-row">
+            <div className="md:w-1/2">
+              <label className="text-lg">
+                City <span className="text-red-500">*</span>
+              </label>
+              <input
+                placeholder={user.city}
+                name="city"
+                className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                type="text"
+                readOnly
+              />
+            </div>
+            <div className="md:w-1/2">
+              <label className="text-lg">
+                Location <span className="text-red-500">*</span>
+              </label>
+              <input
+                placeholder={user.location}
+                name="location"
+                className="w-full border-b border-black/50 py-2 focus:border-b-2 focus:outline-none"
+                type="text"
+                readOnly
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
