@@ -19,18 +19,36 @@ const Header = () => {
       <li>
         <Link to={"/"}>Home</Link>
       </li>
+      {!user && (
+        <>
+          <li>
+            <Link to={"/signup"}>Become a Tutor</Link>
+          </li>
+          <li>
+            <Link to={"/signup"}>Hire a Tutor</Link>
+          </li>
+        </>
+      )}
 
-      <li>
-        <Link to={"/job-list"}>Job Board</Link>
-      </li>
       {user && (
         <li>
           <Link to={"/profile"}>Profile</Link>
         </li>
       )}
-      {user && (
+      {user?.accountType === "tutor" && (
+        <>
+          <li>
+            <Link to={"/job-list"}>Job Board</Link>
+          </li>
+
+          <li>
+            <Link>Applied jobs</Link>
+          </li>
+        </>
+      )}
+      {user?.accountType === "guardian" && (
         <li>
-          <Link>Applied jobs</Link>
+          <Link>Post a tuition</Link>
         </li>
       )}
     </>

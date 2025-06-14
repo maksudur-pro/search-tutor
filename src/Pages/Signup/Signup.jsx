@@ -19,6 +19,7 @@ const Signup = () => {
     const location = form.location.value;
     const password = form.password.value;
     const confirmPassword = form.confirmPassword.value;
+    const accountType = form.accountType.value;
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
@@ -33,7 +34,8 @@ const Signup = () => {
     //   city,
     //   location,
     //   password,
-    //   confirmPassword
+    //   confirmPassword,
+    //   accountType
     // );
 
     createUser(email, password)
@@ -50,6 +52,7 @@ const Signup = () => {
           email,
           city,
           location,
+          accountType,
         };
 
         // Send to MongoDB backend
@@ -80,6 +83,85 @@ const Signup = () => {
       <form
         onSubmit={handleRegister}
         className="mt-0 w-full gap-4 rounded-2xl border border-[rgba(6,53,85,0.16)] bg-white px-5 py-8 text-black md:mt-5 md:px-7">
+        <div className="my-8 flex flex-col-reverse items-center gap-6 text-black md:flex-row md:gap-4">
+          {/* Guardian Option */}
+          <div className="w-full md:w-1/2">
+            <label htmlFor="guardian">
+              <input
+                required
+                id="guardian"
+                className="peer sr-only"
+                type="radio"
+                value="guardian"
+                name="accountType"
+              />
+              <div className="relative flex cursor-pointer items-center gap-4 rounded-full border-2 p-3 transition-all duration-500 ease-out md:gap-3 md:p-2 border-white bg-white peer-checked:border-indigo-500 peer-checked:shadow-lg">
+                <img
+                  alt="guardian avatar"
+                  className="size-[100px] rounded-full md:size-[67px]"
+                  src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Guardian-01.png"
+                />
+                <div>
+                  <p className="text-xl font-bold md:text-base">
+                    Guardian or Student
+                  </p>
+                  <p className="text-lg leading-6 md:text-xs">
+                    Select, If you're looking for a tutor
+                  </p>
+                </div>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="absolute -top-2 right-4 hidden h-[24px] w-[24px] rounded-full bg-indigo-500 text-white peer-checked:block"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <polyline
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    points="6 13 10.2 16.6 18 7"
+                  />
+                </svg>
+              </div>
+            </label>
+          </div>
+
+          {/* Tutor Option */}
+          <div className="w-full md:w-1/2">
+            <label htmlFor="tutor">
+              <input
+                id="tutor"
+                className="peer sr-only"
+                type="radio"
+                value="tutor"
+                name="accountType"
+              />
+              <div className="relative flex cursor-pointer items-center gap-4 rounded-full border-2 p-3 transition-all duration-500 ease-out md:gap-3 md:p-2 border-white bg-white peer-checked:border-indigo-500 peer-checked:shadow-lg">
+                <img
+                  alt="tutor avatar"
+                  className="size-[100px] rounded-full md:size-[67px]"
+                  src="https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Tutor-01.png"
+                />
+                <div>
+                  <p className="text-xl font-bold md:text-base">Tutor</p>
+                  <p className="text-lg leading-6 md:text-xs">
+                    Select, If you're looking for tuition job
+                  </p>
+                </div>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="absolute -top-2 right-4 hidden h-[24px] w-[24px] rounded-full bg-indigo-500 text-white peer-checked:block"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <polyline
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    points="6 13 10.2 16.6 18 7"
+                  />
+                </svg>
+              </div>
+            </label>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="md:w-1/2">
             <label className="text-lg">

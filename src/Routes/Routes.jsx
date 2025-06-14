@@ -7,6 +7,7 @@ import Signup from "../Pages/Signup/Signup";
 import Profile from "../Pages/Profile/Profile";
 import PublicRoute from "./PublicRoute/PublicRoute";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import RoleRoute from "./RoleRoute/RoleRoute";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/job-list",
-        element: <JobBoard />,
+        element: (
+          <RoleRoute allowedRoles={["tutor"]}>
+            <JobBoard />
+          </RoleRoute>
+        ),
       },
       {
         path: "/signin",

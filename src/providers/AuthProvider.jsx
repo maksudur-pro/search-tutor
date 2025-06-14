@@ -36,15 +36,40 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      console.log("currentUser", currentUser);
-      setLoading(false);
+      if (currentUser) {
+        // Fetch user data from MongoDB using uid
+        fetch(`https://search-tutor-server.vercel.app/users/${currentUser.uid}`)
+          .then((res) => res.json())
+          .then((userData) => {
+            setUser(userData); // set full user info from DB
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+            setLoading(false);
+          });
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
     });
 
     return () => {
       return unsubscribe;
     };
   }, []);
+
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //     console.log("currentUser", currentUser);
+  //     setLoading(false);
+  //   });
+
+  //   return () => {
+  //     return unsubscribe;
+  //   };
+  // }, []);
 
   const authInfo = {
     user,
