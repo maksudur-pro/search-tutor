@@ -1,18 +1,18 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const SignIn = () => {
   const { signIn, loading } = useContext(AuthContext);
+  const [localLoading, setLocalLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (event) => {
     event.preventDefault();
+    setLocalLoading(true);
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
@@ -22,27 +22,49 @@ const SignIn = () => {
         const user = result.user;
         const uid = user.uid;
 
-        //  Fetch full user data from your MongoDB backend
+        // Fetch full user data first
+
         fetch(`https://search-tutor-server.vercel.app/users/${uid}`)
           .then((res) => res.json())
           .then((userData) => {
             console.log("Full user data:", userData);
 
-            navigate(from, { replace: true }); // Redirect
+            // Show success alert, then navigate after it closes
+            Swal.fire({
+              icon: "success",
+              title: "Login successful!",
+              timer: 1500,
+              showConfirmButton: false,
+            }).then(() => {
+              setLocalLoading(false);
+              navigate("/");
+            });
           })
           .catch((err) => {
             console.error("Failed to load MongoDB user:", err);
+            Swal.fire({
+              icon: "warning",
+              title: "Warning",
+              text: "Logged in, but failed to fetch full user data.",
+            }).then(() => {
+              setLocalLoading(false);
+              navigate("/");
+            });
           });
       })
       .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
+        setLocalLoading(false);
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message,
+        });
       });
   };
 
   return (
     <>
-      {loading ? (
+      {loading || localLoading ? (
         <div className="flex justify-center items-center h-screen w-screen bg-white">
           <progress className="progress w-56"></progress>
         </div>

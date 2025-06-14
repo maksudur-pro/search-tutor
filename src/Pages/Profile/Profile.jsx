@@ -2,11 +2,11 @@ import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const Profile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
   return (
     <>
-      {!user ? (
+      {!user || loading ? (
         <div className="flex justify-center items-center h-screen w-screen bg-white">
           <progress className="progress w-56"></progress>
         </div>

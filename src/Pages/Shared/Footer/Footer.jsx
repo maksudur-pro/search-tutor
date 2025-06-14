@@ -158,11 +158,11 @@ const Footer = () => {
               </li>
             </ul>
             <h2 className="text-xl font-bold text-white md:text-left lg:text-justify">
-              Join Our Community
+              Join Our Facebook Community
             </h2>
             <div className="mt-2 flex items-center gap-3  md:flex-row md:items-center">
               <a
-                href="https://www.facebook.com/share/1EzcCG7TKe/"
+                href="https://www.facebook.com/share/g/1CsJLDz75R/"
                 target="_blank">
                 <img
                   alt="Home Tutors &amp; Tuitions"
@@ -176,7 +176,7 @@ const Footer = () => {
                 />
               </a>
               <a
-                href="https://www.facebook.com/share/1EzcCG7TKe/"
+                href="https://www.facebook.com/share/g/12LNfQSHmif/?mibextid=A7sQZp"
                 target="_blank">
                 <img
                   alt="Home Tutors &amp; Tuitions"
