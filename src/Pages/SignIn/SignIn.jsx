@@ -5,66 +5,43 @@ import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignIn = () => {
-  const { signIn, loading } = useContext(AuthContext);
-  const [localLoading, setLocalLoading] = useState(false);
+  const { signIn, userInfo, loading, setLoading } = useContext(AuthContext);
+
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    setLocalLoading(true);
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
 
-    signIn(email, password)
-      .then((result) => {
-        const user = result.user;
-        const uid = user.uid;
-
-        // Fetch full user data first
-
-        fetch(`https://search-tutor-server.vercel.app/users/${uid}`)
-          .then((res) => res.json())
-          .then((userData) => {
-            console.log("Full user data:", userData);
-
-            // Show success alert, then navigate after it closes
-            Swal.fire({
-              icon: "success",
-              title: "Login successful!",
-              timer: 1500,
-              showConfirmButton: false,
-            }).then(() => {
-              setLocalLoading(false);
-              navigate("/");
-            });
-          })
-          .catch((err) => {
-            console.error("Failed to load MongoDB user:", err);
-            Swal.fire({
-              icon: "warning",
-              title: "Warning",
-              text: "Logged in, but failed to fetch full user data.",
-            }).then(() => {
-              setLocalLoading(false);
-              navigate("/");
-            });
-          });
-      })
-      .catch((error) => {
-        setLocalLoading(false);
+    try {
+      await signIn(email, password);
+      if (!userInfo) {
+        setLoading(false);
+        navigate("/profile");
         Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: error.message,
+          icon: "success",
+          title: "Login successful!",
+          timer: 1200,
+          showConfirmButton: false,
         });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message,
       });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {loading || localLoading ? (
+      {loading ? (
         <div className="flex justify-center items-center h-screen w-screen bg-white">
           <progress className="progress w-56"></progress>
         </div>
@@ -84,7 +61,7 @@ const SignIn = () => {
                   type="email"
                   name="email"
                   placeholder="email"
-                  className="block w-full px-4 py-2 mt-2  bg-white border rounded-md focus:border-indigo-500 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  className="block w-full px-4 py-2 mt-2 bg-white border rounded-md focus:border-indigo-500 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
               </div>
               <div className="mb-2 relative">
@@ -96,7 +73,7 @@ const SignIn = () => {
                   name="password"
                   required
                   placeholder="password"
-                  className="block w-full px-4 py-2 mt-2  bg-white border rounded-md focus:border-indigo-500 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  className="block w-full px-4 py-2 mt-2 bg-white border rounded-md focus:border-indigo-500 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
                 <span
                   className="absolute right-3 top-10 cursor-pointer text-gray-600"
@@ -109,7 +86,7 @@ const SignIn = () => {
               </a>
 
               <div className="mt-6">
-                <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-indigo-500 rounded-md hover:bg-intext-indigo-500 focus:outline-none focus:bg-intext-indigo-500">
+                <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">
                   Login
                 </button>
               </div>
@@ -118,11 +95,9 @@ const SignIn = () => {
               <div className="absolute px-5 bg-white">Or</div>
             </div>
             <p className="mt-8 text-xs font-light text-center text-gray-700">
-              {" "}
               Don&apos;t have an account?{" "}
               <Link
                 to="/signup"
-                href="#"
                 className="font-medium text-indigo-500 hover:underline">
                 Sign up
               </Link>

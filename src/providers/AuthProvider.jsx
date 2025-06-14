@@ -13,20 +13,17 @@ const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userInfo, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password).finally(() =>
-      setLoading(false)
-    );
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const signIn = (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password).finally(() =>
-      setLoading(false)
-    );
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logOut = () => {
@@ -36,12 +33,13 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       if (currentUser) {
         // Fetch user data from MongoDB using uid
         fetch(`https://search-tutor-server.vercel.app/users/${currentUser.uid}`)
           .then((res) => res.json())
-          .then((userData) => {
-            setUser(userData); // set full user info from DB
+          .then((data) => {
+            setUserData(data); // set full user info from DB
             setLoading(false);
           })
           .catch((error) => {
@@ -49,14 +47,12 @@ const AuthProvider = ({ children }) => {
             setLoading(false);
           });
       } else {
-        setUser(null);
+        setUserData(null);
         setLoading(false);
       }
     });
 
-    return () => {
-      return unsubscribe;
-    };
+    return unsubscribe;
   }, []);
 
   // useEffect(() => {
@@ -73,10 +69,12 @@ const AuthProvider = ({ children }) => {
 
   const authInfo = {
     user,
+    userInfo,
     loading,
     createUser,
     signIn,
     logOut,
+    setLoading,
   };
 
   return (

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
 
 const Header = () => {
-  const { user, logOut, loading } = useContext(AuthContext);
+  const { user, userInfo, logOut, loading } = useContext(AuthContext);
 
   const handleLogout = () => {
     logOut()
@@ -35,7 +35,7 @@ const Header = () => {
           <Link to={"/profile"}>Profile</Link>
         </li>
       )}
-      {user?.accountType === "tutor" && (
+      {userInfo?.accountType === "tutor" && (
         <>
           <li>
             <Link to={"/job-list"}>Job Board</Link>
@@ -46,7 +46,7 @@ const Header = () => {
           </li>
         </>
       )}
-      {user?.accountType === "guardian" && (
+      {userInfo?.accountType === "guardian" && (
         <li>
           <Link>Post a tuition</Link>
         </li>

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const RoleRoute = ({ children, allowedRoles = [] }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, userInfo, loading } = useContext(AuthContext);
 
   if (loading) {
     return (
@@ -13,7 +13,7 @@ const RoleRoute = ({ children, allowedRoles = [] }) => {
     );
   }
 
-  if (!user || !allowedRoles.includes(user.accountType)) {
+  if (!user || !allowedRoles.includes(userInfo.accountType)) {
     return <Navigate to="/" replace />;
   }
 
