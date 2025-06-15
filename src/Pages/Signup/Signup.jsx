@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Signup = () => {
-  const { createUser, loading, setLoading } = useContext(AuthContext);
+  const { createUser, loading, setLoading, setUserData } =
+    useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
+
     createUser(email, password)
       .then((result) => {
         const loggedUser = result.user;
@@ -49,8 +52,9 @@ const Signup = () => {
           location,
           accountType,
         };
-        setLoading(true);
-        // Send to MongoDB backend
+
+        setUserData(userData);
+        navigate("/");
         fetch("https://search-tutor-server.vercel.app/users", {
           method: "POST",
           headers: {
@@ -61,7 +65,7 @@ const Signup = () => {
           .then((res) => res.json())
           .then((data) => {
             console.log("User saved to MongoDB:", data);
-
+            setUserData(userData);
             setLoading(false);
             Swal.fire({
               icon: "success",
