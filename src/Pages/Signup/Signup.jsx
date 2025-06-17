@@ -11,10 +11,10 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
-
     const form = event.target;
+
     const name = form.name.value;
     const gender = form.gender.value;
     const phoneNumber = form.phoneNumber.value;
@@ -24,9 +24,10 @@ const Signup = () => {
     const password = form.password.value;
     const confirmPassword = form.confirmPassword.value;
     const accountType = form.accountType.value;
+    const imageFile = form.image.files[0];
 
+    // Basic validations
     if (password !== confirmPassword) {
-      setLoading(false);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -35,65 +36,178 @@ const Signup = () => {
       return;
     }
 
+    if (!imageFile) {
+      Swal.fire({
+        icon: "error",
+        title: "Image Required",
+        text: "Please select a profile image.",
+      });
+      return;
+    }
+
     setLoading(true);
 
-    createUser(email, password)
-      .then((result) => {
-        const loggedUser = result.user;
-        const uid = loggedUser.uid;
+    try {
+      // Upload image to cloudinary
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      formData.append("upload_preset", "user_profile_img");
 
-        const userData = {
-          uid,
-          name,
-          gender,
-          phone: phoneNumber,
-          email,
-          city,
-          location,
-          accountType,
-        };
-
-        setUserData(userData);
-        navigate("/");
-        fetch("https://search-tutor-server.vercel.app/users", {
+      const imageRes = await fetch(
+        "https://api.cloudinary.com/v1_1/dvrn8ytwm/image/upload",
+        {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          body: formData,
+        }
+      );
+
+      const imageData = await imageRes.json();
+      if (!imageData.secure_url) throw new Error("Image upload failed");
+
+      const imageUrl = imageData.secure_url;
+
+      // Create Firebase User
+      const result = await createUser(email, password);
+      const uid = result.user.uid;
+
+      // Prepare userData
+      const userData = {
+        uid,
+        name,
+        gender,
+        phone: phoneNumber,
+        email,
+        city,
+        location,
+        accountType,
+        image: imageUrl,
+      };
+
+      // Save to MongoDB
+      const dbRes = await fetch(
+        "https://search-tutor-server.vercel.app/users",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("User saved to MongoDB:", data);
-            setUserData(userData);
-            setLoading(false);
-            Swal.fire({
-              icon: "success",
-              title: "Sign up successful!",
-              text: "Welcome aboard!",
-              timer: 2000,
-              showConfirmButton: false,
-            });
-            navigate("/");
-          })
-          .catch((error) => {
-            setLoading(false);
-            Swal.fire({
-              icon: "error",
-              title: "Database Error",
-              text: error.message || "Failed to save user data.",
-            });
-          });
-      })
-      .catch((error) => {
-        setLoading(false);
+        }
+      );
+
+      if (!dbRes.ok) throw new Error("Failed to save user to database");
+
+      const dbData = await dbRes.json();
+      console.log("User saved to MongoDB:", dbData);
+
+      setUserData(dbData);
+      Swal.fire({
+        icon: "success",
+        title: "Sign up successful!",
+        text: "Welcome aboard!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      if (error.code === "auth/email-already-in-use") {
         Swal.fire({
           icon: "error",
-          title: "Signup Failed",
-          text: error.message,
+          title: "Email in use",
+          text: "This email is already registered. Please try logging in.",
         });
-      });
+        return;
+      }
+
+      Swal.fire({ icon: "error", title: "Error", text: error.message });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // const handleRegister = (event) => {
+  //   event.preventDefault();
+
+  //   const form = event.target;
+  //   const name = form.name.value;
+  //   const gender = form.gender.value;
+  //   const phoneNumber = form.phoneNumber.value;
+  //   const email = form.email.value;
+  //   const city = form.city.value;
+  //   const location = form.location.value;
+  //   const password = form.password.value;
+  //   const confirmPassword = form.confirmPassword.value;
+  //   const accountType = form.accountType.value;
+
+  //   if (password !== confirmPassword) {
+  //     setLoading(false);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: "Passwords do not match!",
+  //     });
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   createUser(email, password)
+  //     .then((result) => {
+  //       const loggedUser = result.user;
+  //       const uid = loggedUser.uid;
+
+  //       const userData = {
+  //         uid,
+  //         name,
+  //         gender,
+  //         phone: phoneNumber,
+  //         email,
+  //         city,
+  //         location,
+  //         accountType,
+  //       };
+
+  //       setUserData(userData);
+  //       navigate("/");
+  //       fetch("https://search-tutor-server.vercel.app/users", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(userData),
+  //       })
+  //         .then((res) => res.json())
+  //         .then((data) => {
+  //           console.log("User saved to MongoDB:", data);
+  //           setUserData(userData);
+  //           setLoading(false);
+  //           Swal.fire({
+  //             icon: "success",
+  //             title: "Sign up successful!",
+  //             text: "Welcome aboard!",
+  //             timer: 2000,
+  //             showConfirmButton: false,
+  //           });
+  //           navigate("/");
+  //         })
+  //         .catch((error) => {
+  //           setLoading(false);
+  //           Swal.fire({
+  //             icon: "error",
+  //             title: "Database Error",
+  //             text: error.message || "Failed to save user data.",
+  //           });
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       setLoading(false);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Signup Failed",
+  //         text: error.message,
+  //       });
+  //     });
+  // };
 
   return (
     <>
@@ -184,7 +298,17 @@ const Signup = () => {
                 </label>
               </div>
             </div>
-
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">upload profile</legend>
+              <input
+                type="file"
+                name="image"
+                className="file-input"
+                accept="image/*"
+                required
+              />
+              <label className="label">Max size 2MB</label>
+            </fieldset>
             <div className="flex flex-col gap-8 md:flex-row">
               <div className="md:w-1/2">
                 <label className="text-lg">

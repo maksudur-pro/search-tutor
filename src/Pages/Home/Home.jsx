@@ -43,7 +43,7 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="hero-images w-full p-0 lg:p-9 md:w-[33rem] lg:w-1/2">
+              <div className="hero-images w-full p-2 lg:p-9 md:w-[33rem] lg:w-1/2">
                 <div className="flex items-end gap-3">
                   <img
                     alt="Home Tutors & Tuitions"
