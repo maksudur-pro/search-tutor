@@ -112,6 +112,18 @@ const Header = () => {
           </NavLink>
         </li>
       )}
+      {userInfo?.accountType === "admin" && (
+        <li>
+          <NavLink
+            to="/manage-users"
+            className={({ isActive }) =>
+              isActive ? "text-blue-600 font-bold" : ""
+            }>
+            <PlusCircle size={18} className="block md:hidden lg:hidden" />
+            Manage Users
+          </NavLink>
+        </li>
+      )}
     </>
   );
 

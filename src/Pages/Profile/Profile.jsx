@@ -13,7 +13,7 @@ import {
 
 const Profile = () => {
   const { userInfo, loading } = useContext(AuthContext);
-
+  console.log(userInfo);
   if (loading || !userInfo) {
     return (
       <div className="flex justify-center items-center h-screen w-screen bg-white">

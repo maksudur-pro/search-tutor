@@ -8,6 +8,7 @@ import Profile from "../Pages/Profile/Profile";
 import PublicRoute from "./PublicRoute/PublicRoute";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import RoleRoute from "./RoleRoute/RoleRoute";
+import ManageUsers from "../Pages/Admin/ManageUsers/ManageUsers";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allowedRoles={["tutor"]}>
             <JobBoard />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/manage-users",
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <ManageUsers />
           </RoleRoute>
         ),
       },
