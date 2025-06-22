@@ -51,7 +51,7 @@ const Home = () => {
                     width="201"
                     height="208"
                     decoding="async"
-                    className="img-shadow floating max-w-[9.5rem] rounded-tl-[8rem] sm:max-w-full"
+                    className="img-shadow floating max-w-[9.5rem]  sm:max-w-full"
                     src="/img1.jpg"
                   />
                   <img
@@ -60,7 +60,7 @@ const Home = () => {
                     width="160"
                     height="160"
                     decoding="async"
-                    className="floating2 img-shadow max-w-[8.6rem] rounded sm:max-w-full"
+                    className=" img-shadow max-w-[8.6rem] floating2 sm:max-w-full"
                     src="/img2.jpg"
                   />
                 </div>
@@ -71,7 +71,7 @@ const Home = () => {
                     width="160"
                     height="160"
                     decoding="async"
-                    className="floating2 img-shadow max-w-[8.6rem] rounded sm:max-w-full"
+                    className=" img-shadow max-w-[8.6rem] floating2 sm:max-w-full"
                     src="img3.jpg"
                   />
                   <img
@@ -80,7 +80,7 @@ const Home = () => {
                     width="201"
                     height="208"
                     decoding="async"
-                    className="floating img-shadow max-w-[9.5rem] rounded-br-[8rem] sm:max-w-full"
+                    className=" img-shadow max-w-[9.5rem] floating sm:max-w-full"
                     src="/img1.jpg"
                   />
                 </div>
