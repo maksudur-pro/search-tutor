@@ -4,6 +4,7 @@ import ReviewGuardian from "../../Component/ReviewGuardian/ReviewGuardian";
 import ReviewTeacher from "../../Component/ReviewTeacher/ReviewTeacher";
 import HowToWork from "../../Component/HowToWork/HowToWork";
 import { AuthContext } from "../../providers/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const { loading } = useContext(AuthContext);
@@ -36,9 +37,9 @@ const Home = () => {
                   <p className="text-justify text-[rgb(136, 136, 136)]">
                     Want to become a Tutor?
                   </p>
-                  <a className="font-bold text-indigo-500" href="/signup/tutor">
+                  <Link className="font-bold text-indigo-500" to="/signup">
                     Sign Up
-                  </a>{" "}
+                  </Link>{" "}
                   <p className="text-justify text-[rgb(136, 136, 136)]">now</p>
                 </div>
               </div>

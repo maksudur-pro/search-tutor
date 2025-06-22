@@ -27,7 +27,7 @@ const Header = () => {
 
   const navOption = (
     <>
-      <li>
+      {/* <li>
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -36,27 +36,27 @@ const Header = () => {
           <Home size={18} className="block md:hidden lg:hidden" />
           Home
         </NavLink>
-      </li>
+      </li> */}
       {!user && (
         <>
           <li>
             <NavLink
-              to="/signup"
+              to="/signin"
               className={({ isActive }) =>
                 isActive ? "text-blue-600 font-bold" : ""
               }>
               <UserPlus size={18} className="block md:hidden lg:hidden" />
-              Become a Tutor
+              Sign In
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="/signup"
+              to="/job-list"
               className={({ isActive }) =>
                 isActive ? "text-blue-600 font-bold" : ""
               }>
-              <Briefcase size={18} className="block md:hidden lg:hidden" />
-              Hire a Tutor
+              <ClipboardList size={18} className="block md:hidden lg:hidden" />
+              Job Board
             </NavLink>
           </li>
         </>
@@ -203,9 +203,9 @@ const Header = () => {
                   </Link>
                 ) : (
                   <Link
-                    to={"/signin"}
+                    to={"/signup"}
                     className="btn bg-indigo-500 py-2 px-8 text-white hidden md:block">
-                    Sign In
+                    Become a Tutor
                   </Link>
                 )}
                 <div className="drawer lg:hidden">
