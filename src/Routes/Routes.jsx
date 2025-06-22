@@ -9,6 +9,7 @@ import PublicRoute from "./PublicRoute/PublicRoute";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import RoleRoute from "./RoleRoute/RoleRoute";
 import ManageUsers from "../Pages/Admin/ManageUsers/ManageUsers";
+import HireTutor from "../Pages/HireTutor/HireTutor";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home></Home>,
+      },
+      {
+        path: "/hire-tutor",
+        element: <HireTutor />,
       },
       {
         path: "/job-list",

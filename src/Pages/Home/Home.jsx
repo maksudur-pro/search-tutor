@@ -30,16 +30,18 @@ const Home = () => {
                     Book one-on-one lessons with verified tutors in your area
                   </h2>
                 </div>
-                <a className="hero_button rounded-xl border border-indigo-500 bg-indigo-500 px-6 py-3 text-white transition-all duration-500 ease-in-out hover:bg-white hover:text-indigo-500">
+                <Link
+                  to={"/hire-tutor"}
+                  className="hero_button rounded-xl border border-indigo-500 bg-indigo-500 px-6 py-3 text-white transition-all duration-500 ease-in-out hover:bg-white hover:text-indigo-500">
                   Hire a Tutor (It’s Free!)
-                </a>
+                </Link>
                 <div className="m-0 mt-4 flex gap-1 text-gray-500">
                   <p className="text-justify text-[rgb(136, 136, 136)]">
                     Want to become a Tutor?
                   </p>
-                  <Link className="font-bold text-indigo-500" to="/signup">
+                  <Link className="font-bold text-indigo-500" to={"/signup"}>
                     Sign Up
-                  </Link>{" "}
+                  </Link>
                   <p className="text-justify text-[rgb(136, 136, 136)]">now</p>
                 </div>
               </div>
