@@ -26,11 +26,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/job-list",
-        element: (
-          <RoleRoute allowedRoles={["tutor"]}>
-            <JobBoard />
-          </RoleRoute>
-        ),
+        element: <JobBoard />,
       },
       {
         path: "/manage-users",

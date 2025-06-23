@@ -1,8 +1,20 @@
 // components/TutorJobCard.jsx
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const TutorJobCard = ({ job }) => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleApply = () => {
+    if (!user) {
+      navigate("/signin");
+    } else {
+      navigate(`/apply/${job.id}`);
+    }
+  };
+
   return (
     <>
       <div className="relative  rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-7 pb-2 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
@@ -207,6 +219,7 @@ const TutorJobCard = ({ job }) => {
             </div>
             <Link>
               <button
+                onClick={handleApply}
                 className="  rounded-md text-sm font-medium  transition-all duration-300  border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 px-4 py-2 relative overflow-hidden"
                 type="button">
                 Apply
@@ -215,61 +228,6 @@ const TutorJobCard = ({ job }) => {
           </div>
         </div>
       </div>
-
-      {/* <div className="relative rounded-xl border bg-white p-7 pb-2 shadow hover:-translate-y-1 hover:shadow-lg transition duration-300">
-      <div className="text-[#8c8484]">
-        <Link>
-          <h3 className="mb-3 text-xl font-semibold text-[#2b2b2c] hover:text-indigo-500 transition h-14 overflow-hidden">
-            {job.title}
-          </h3>
-        </Link>
-
-        <div className="mb-4 flex items-center gap-6 text-sm">
-          <p>
-            Job ID: <span className="font-semibold">{job.id}</span>
-          </p>
-          <div className="h-4 w-[2px] bg-[#8c8484]"></div>
-          <p>
-            Posted: <span className="font-semibold">{job.date}</span>
-          </p>
-        </div>
-
-        <div className="mb-4 flex gap-8 text-sm">
-          <div>
-            <p className="text-gray-500">Tuition Type</p>
-            <p className="font-medium text-[#5c5c5c]">{job.type}</p>
-          </div>
-          <div>
-            <p className="text-gray-500">Salary</p>
-            <p className="font-medium text-[#5c5c5c]">{job.salary} BDT</p>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <p className="text-sm text-gray-500">Subjects</p>
-          <p className="font-medium text-[#5c5c5c]">
-            {job.subjects.join(", ")}
-          </p>
-        </div>
-
-        <div className="mb-4">
-          <p className="text-sm text-gray-500">Location</p>
-          <p className="font-medium text-[#5c5c5c]">{job.location}</p>
-        </div>
-
-        <p className="text-sm font-semibold text-pink-600">
-          {job.gender} tutor preferred
-        </p>
-
-        <div className="mt-4">
-          <Link>
-            <button className="text-sm text-blue-600 border border-blue-600 rounded px-4 py-1 hover:bg-blue-50 transition">
-              View Details
-            </button>
-          </Link>
-        </div>
-      </div>
-    </div> */}
     </>
   );
 };
