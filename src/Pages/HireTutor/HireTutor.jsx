@@ -8,9 +8,12 @@ import tuitionTypeOptions from "../../assets/tuitionTypeOptions.json";
 import categoryOptions from "../../assets/categoryOptions.json";
 import cityOptions from "../../assets/cityOptions.json";
 import locationOptionsByCity from "../../assets/locationOptionsByCity.json";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const HireTutor = () => {
   const { loading } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -35,6 +38,39 @@ const HireTutor = () => {
 
   const onSubmit = (data) => {
     console.log("Form submitted data:", data);
+
+    fetch("https://search-tutor-server.vercel.app/tuition-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "Tuition request submitted successfully!",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            navigate("/"); // navigate to home after success
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Network Error",
+          text: "Please try again later.",
+        });
+      });
   };
 
   return (
