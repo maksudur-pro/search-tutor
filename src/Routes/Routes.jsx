@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import RoleRoute from "./RoleRoute/RoleRoute";
 import ManageUsers from "../Pages/Admin/ManageUsers/ManageUsers";
 import HireTutor from "../Pages/HireTutor/HireTutor";
+import TuitionRequests from "../Pages/Admin/TuitionRequests/TuitionRequests";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allowedRoles={["admin"]}>
             <ManageUsers />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/tuition-requests",
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <TuitionRequests />
           </RoleRoute>
         ),
       },
