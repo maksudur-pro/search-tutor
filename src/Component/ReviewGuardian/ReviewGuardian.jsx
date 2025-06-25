@@ -21,7 +21,9 @@ const ReviewGuardian = () => {
       <p className="text-center text-[#888888]">
         Hire a tutor today and start learning!
       </p>
-      <Link className="group mx-auto my-4 flex w-fit items-center justify-center gap-5 rounded-xl border border-indigo-500 bg-indigo-500 px-8 py-3 text-white transition-all duration-500 ease-in-out hover:bg-white hover:text-indigo-500">
+      <Link
+        to={"/hire-tutor"}
+        className="group mx-auto my-4 flex w-fit items-center justify-center gap-5 rounded-xl border border-indigo-500 bg-indigo-500 px-8 py-3 text-white transition-all duration-500 ease-in-out hover:bg-white hover:text-indigo-500">
         Hire a Tutor{" "}
         <svg
           stroke="currentColor"

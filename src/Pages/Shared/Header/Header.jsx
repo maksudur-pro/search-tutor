@@ -10,6 +10,7 @@ import {
   LogIn,
   LogOut,
   PlusCircle,
+  Send,
   User,
   UserPlus,
 } from "lucide-react";
@@ -137,6 +138,16 @@ const Header = () => {
               }>
               <BookOpen size={18} className="block md:hidden lg:hidden mr-2" />
               Tuition Requests
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/post-job"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-bold" : ""
+              }>
+              <Send size={18} className="block md:hidden lg:hidden mr-2" />
+              Post Job
             </NavLink>
           </li>
         </>

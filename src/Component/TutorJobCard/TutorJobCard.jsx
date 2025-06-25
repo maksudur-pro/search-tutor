@@ -222,7 +222,7 @@ const TutorJobCard = ({ job }) => {
                 onClick={handleApply}
                 className="  rounded-md text-sm font-medium  transition-all duration-300  border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 px-4 py-2 relative overflow-hidden"
                 type="button">
-                Apply
+                Details
               </button>
             </Link>
           </div>
