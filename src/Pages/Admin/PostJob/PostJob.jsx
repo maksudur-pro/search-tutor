@@ -9,6 +9,7 @@ import cityOptions from "../../../assets/cityOptions.json";
 import locationOptionsByCity from "../../../assets/locationOptionsByCity.json";
 
 import { AuthContext } from "../../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const PostJob = () => {
   const { loading } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const PostJob = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -35,8 +37,43 @@ const PostJob = () => {
     setValue("location", val[0]?.value || "");
   };
 
-  const onSubmit = (data) => {
-    console.log("Form submitted data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await fetch(
+        "https://search-tutor-server.vercel.app/job-requests",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result = await res.json();
+      console.log(result);
+      if (result.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Job posted successfully",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        reset();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: result.message || "Failed to post job",
+        });
+      }
+    } catch (error) {
+      console.error("Error posting job:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error posting job",
+      });
+    }
   };
 
   return (
@@ -96,21 +133,18 @@ const PostJob = () => {
             <div className="mt-8 flex flex-col gap-8 md:flex-row">
               <div className="md:w-1/2">
                 <label className="text-sm">
-                  No. of Students <span className="text-red-500">*</span>
+                  Job Title <span className="text-red-500">*</span>
                 </label>
                 <input
-                  placeholder="No. of Students"
+                  placeholder="Job Title"
                   className="w-full border px-2 border-black/30 py-2  focus:outline-none"
                   type="text"
-                  {...register("studentsNumber", { required: true })}
+                  {...register("jobTitle", { required: true })}
                 />
-                {errors.studentsNumber && (
-                  <p className="text-red-500 text-xs">
-                    Students Number is required
-                  </p>
+                {errors.jobTitle && (
+                  <p className="text-red-500 text-xs">Job Title is required</p>
                 )}
               </div>
-
               <div className="md:w-1/2">
                 <p className="text-sm">
                   Student Gender <span className="text-red-500">*</span>
@@ -310,6 +344,42 @@ const PostJob = () => {
                   <p className="text-red-500 text-xs">Salary is required</p>
                 )}
               </div>
+              <div className="md:w-1/2">
+                <label className="text-sm">
+                  No. of Students <span className="text-red-500">*</span>
+                </label>
+                <input
+                  placeholder="No. of Students"
+                  className="w-full border px-2 border-black/30 py-2  focus:outline-none"
+                  type="text"
+                  {...register("studentsNumber", { required: true })}
+                />
+                {errors.studentsNumber && (
+                  <p className="text-red-500 text-xs">
+                    Students Number is required
+                  </p>
+                )}
+              </div>
+            </div>
+            {/* Tutoring Time */}
+            <div className="mt-8 flex flex-col gap-8 md:flex-row">
+              <div className="md:w-1/2">
+                <label className="text-sm">
+                  Tutoring Time <span className="text-red-500">*</span>
+                </label>
+                <input
+                  placeholder="Tutoring Time"
+                  className="w-full border px-2 border-black/30 py-2  focus:outline-none"
+                  type="text"
+                  {...register("tutoringTime", { required: true })}
+                />
+                {errors.tutoringTime && (
+                  <p className="text-red-500 text-xs">
+                    Tutoring Time is required
+                  </p>
+                )}
+              </div>
+              <div className="md:w-1/2"></div>
             </div>
 
             {/* Submit button */}
