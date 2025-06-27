@@ -12,6 +12,7 @@ import ManageUsers from "../Pages/Admin/ManageUsers/ManageUsers";
 import HireTutor from "../Pages/HireTutor/HireTutor";
 import TuitionRequests from "../Pages/Admin/TuitionRequests/TuitionRequests";
 import PostJob from "../Pages/Admin/PostJob/PostJob";
+import AppliedJobs from "../Pages/AppliedJobs/AppliedJobs";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ export const router = createBrowserRouter([
       {
         path: "/job-list",
         element: <JobBoard />,
+      },
+      {
+        path: "/applied-jobs",
+        element: (
+          <RoleRoute allowedRoles={["tutor"]}>
+            <AppliedJobs />
+          </RoleRoute>
+        ),
       },
       {
         path: "/manage-users",
