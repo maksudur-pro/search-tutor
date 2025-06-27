@@ -1,99 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 
 const JobBoard = () => {
-  const fakeJobs = [
-    {
-      id: "168080",
-      title: "Need English Version Tutor For HSC-1st Year Student-3 Days/Week",
-      date: "Jun 05, 2025",
-      type: "Home Tutoring",
-      salary: 6000,
-      subjects: ["Higher Maths"],
-      location: "Banasree, Dhaka",
-      gender: "Female",
-    },
-    {
-      id: "168081",
-      title: "Urgent Math Tutor Needed for Class 8 Student",
-      date: "Jun 04, 2025",
-      type: "Online",
-      salary: 4000,
-      subjects: ["Math"],
-      location: "Dhanmondi, Dhaka",
-      gender: "Any",
-    },
-    {
-      id: "168082",
-      title: "English Medium O Level Tutor Required - Weekends Only",
-      date: "Jun 03, 2025",
-      type: "Home Tutoring",
-      salary: 7000,
-      subjects: ["English"],
-      location: "Gulshan, Dhaka",
-      gender: "Male",
-    },
-    {
-      id: "168080",
-      title: "Need English Version Tutor For HSC-1st Year Student-3 Days/Week",
-      date: "Jun 05, 2025",
-      type: "Home Tutoring",
-      salary: 6000,
-      subjects: ["Biology", "Physics"],
-      location: "Banasree, Dhaka",
-      gender: "Female",
-    },
-    {
-      id: "168081",
-      title: "Urgent Math Tutor Needed for Class 8 Student",
-      date: "Jun 04, 2025",
-      type: "Online",
-      salary: 4000,
-      subjects: ["Math"],
-      location: "Dhanmondi, Dhaka",
-      gender: "Any",
-    },
-    {
-      id: "168082",
-      title: "English Medium O Level Tutor Required - Weekends Only",
-      date: "Jun 03, 2025",
-      type: "Home Tutoring",
-      salary: 7000,
-      subjects: ["Economics"],
-      location: "Gulshan, Dhaka",
-      gender: "Male",
-    },
-    {
-      id: "168080",
-      title: "Need English Version Tutor For HSC-1st Year Student-3 Days/Week",
-      date: "Jun 05, 2025",
-      type: "Home Tutoring",
-      salary: 6000,
-      subjects: ["Physics"],
-      location: "Banasree, Dhaka",
-      gender: "Female",
-    },
-    {
-      id: "168081",
-      title: "Urgent Math Tutor Needed for Class 8 Student",
-      date: "Jun 04, 2025",
-      type: "Online",
-      salary: 4000,
-      subjects: ["Math"],
-      location: "Dhanmondi, Dhaka",
-      gender: "Any",
-    },
-    {
-      id: "168082",
-      title: "English Medium O Level Tutor Required - Weekends Only",
-      date: "Jun 03, 2025",
-      type: "Home Tutoring",
-      salary: 7000,
-      subjects: ["English", "History"],
-      location: "Gulshan, Dhaka",
-      gender: "Male",
-    },
-  ];
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("https://search-tutor-server.vercel.app/jobs")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setJobs(data.data);
+        } else {
+          setError("Failed to load jobs");
+        }
+      })
+      .catch(() => setError("Error fetching jobs"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <p className="text-center p-4">Loading jobs...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center p-4 text-red-500">{error}</p>;
+  }
+
+  if (jobs.length === 0) {
+    return <p className="text-center p-4">No jobs found.</p>;
+  }
 
   return (
     <div className="bg-[#F2F5FC]">
@@ -116,7 +53,7 @@ const JobBoard = () => {
               </svg>
               <p className="text-[#888]">
                 {" "}
-                <span className="font-semibold">2179</span> jobs found
+                <span className="font-semibold">{jobs.length}</span> jobs found
               </p>
             </div>
             <button className="justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 py-2 hidden items-center px-4 text-sm md:flex md:text-base">
@@ -158,7 +95,7 @@ const JobBoard = () => {
           </div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
-          {fakeJobs.map((job, index) => (
+          {jobs.map((job, index) => (
             <TutorJobCard key={index} job={job} />
           ))}
         </div>

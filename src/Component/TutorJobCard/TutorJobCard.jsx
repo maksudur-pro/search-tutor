@@ -1,43 +1,87 @@
 // components/TutorJobCard.jsx
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const TutorJobCard = ({ job }) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [hasApplied, setHasApplied] = useState(false);
 
-  const handleApply = () => {
+  // Fetch if user has applied
+  useEffect(() => {
+    if (user && job._id) {
+      axios
+        .get(`https://search-tutor-server.vercel.app/applications/check`, {
+          params: { jobId: job._id, userId: user.uid },
+        })
+        .then((res) => {
+          setHasApplied(res.data.hasApplied);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [user, job._id]);
+
+  const handleApply = async () => {
     if (!user) {
-      navigate("/signin");
-    } else {
-      navigate(`/apply/${job.id}`);
+      return navigate("/signin");
+    }
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, apply now!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await axios.post(
+          "https://search-tutor-server.vercel.app/applications",
+          {
+            jobId: job._id,
+            userId: user.uid,
+            userEmail: user.email,
+          }
+        );
+
+        if (res.data.success) {
+          await Swal.fire({
+            icon: "success",
+            title: "Application submitted!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setHasApplied(true);
+        }
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.response?.data?.error || "Error submitting application",
+        });
+      }
     }
   };
 
   return (
     <>
-      <div className="relative  rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-7 pb-2 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
+      <div className="relative  rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-4 lg:p-6 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
         <div className="text-[#8c8484]">
-          <Link>
-            <h3
-              className="mb-3 
-             cursor-pointer text-xl font-semibold text-[#2b2b2c] transition-all duration-300 hover:text-primary ">
-              {job.title}
-            </h3>
-          </Link>
+          <h3 className="mb-3 text-xl font-semibold text-[#2b2b2c] ">
+            {job.title}
+          </h3>
 
-          <div className="mb-6 flex items-center gap-8 ">
-            <p className="text-[12px] lg:text-sm">
-              Job ID : <span className="font-semibold">{job.id}</span>
-            </p>
+          <p className="text-[12px] mb-3">
+            Posted Date : <span className="font-semibold">{job.date}</span>
+          </p>
 
-            <p className="text-[12px] lg:text-sm">
-              Posted Date : <span className="font-semibold">{job.date}</span>
-            </p>
-          </div>
-
-          <div className="mb-6 flex items-center gap-16 text-sm">
+          <div className="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-sm">
             {/* Tuition Type */}
             <div className="flex items-start gap-2">
               <svg
@@ -73,12 +117,49 @@ const TutorJobCard = ({ job }) => {
               </svg>
               <div>
                 <p>Student Gender</p>
-                <p className="text-nowrap font-medium text-[#5c5c5c]">Female</p>
+                <p className="text-nowrap font-medium text-[#5c5c5c]">
+                  {job.studentGender}
+                </p>
               </div>
             </div>
-          </div>
-          <div className="mb-6 flex items-center gap-16 text-sm">
-            {/* Salary */}
+            <div className="flex items-start gap-2">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 576 512"
+                className="text-[#0675c1]"
+                height="15"
+                width="15"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M519.442 288.651c-41.519 0-59.5 31.593-82.058 31.593C377.409 320.244 432 144 432 144s-196.288 80-196.288-3.297c0-35.827 36.288-46.25 36.288-85.985C272 19.216 243.885 0 210.539 0c-34.654 0-66.366 18.891-66.366 56.346 0 41.364 31.711 59.277 31.711 81.75C175.885 207.719 0 166.758 0 166.758v333.237s178.635 41.047 178.635-28.662c0-22.473-40-40.107-40-81.471 0-37.456 29.25-56.346 63.577-56.346 33.673 0 61.788 19.216 61.788 54.717 0 39.735-36.288 50.158-36.288 85.985 0 60.803 129.675 25.73 181.23 25.73 0 0-34.725-120.101 25.827-120.101 35.962 0 46.423 36.152 86.308 36.152C556.712 416 576 387.99 576 354.443c0-34.199-18.962-65.792-56.558-65.792z"></path>
+              </svg>
+              <div>
+                <p>Category</p>
+                <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
+                  {job.category}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 576 512"
+                className="mt-1 text-[#0675c1]"
+                height="16"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M564 0h-79c-10.7 0-16 12.9-8.5 20.5l16.9 16.9-48.7 48.7C422.5 72.1 396.2 64 368 64c-33.7 0-64.6 11.6-89.2 30.9 14 16.7 25 36 32.1 57.1 14.5-14.8 34.7-24 57.1-24 44.1 0 80 35.9 80 80s-35.9 80-80 80c-22.3 0-42.6-9.2-57.1-24-7.1 21.1-18 40.4-32.1 57.1 24.5 19.4 55.5 30.9 89.2 30.9 79.5 0 144-64.5 144-144 0-28.2-8.1-54.5-22.1-76.7l48.7-48.7 16.9 16.9c2.4 2.4 5.4 3.5 8.4 3.5 6.2 0 12.1-4.8 12.1-12V12c0-6.6-5.4-12-12-12zM144 64C64.5 64 0 128.5 0 208c0 68.5 47.9 125.9 112 140.4V400H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h36v36c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-36h36c6.6 0 12-5.4 12-12v-40c0-6.6-5.4-12-12-12h-36v-51.6c64.1-14.6 112-71.9 112-140.4 0-79.5-64.5-144-144-144zm0 224c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"></path>
+              </svg>
+              <div>
+                <p>Class</p>
+                <p className="text-nowrap font-medium text-[#5c5c5c]">
+                  {job.classLevel}
+                </p>
+              </div>
+            </div>
             <div className="flex gap-2 align-baseline">
               <svg
                 stroke="currentColor"
@@ -112,11 +193,11 @@ const TutorJobCard = ({ job }) => {
               </svg>
               <div>
                 <p>Preferred Tutor</p>
-                <p className="text-nowrap font-medium text-[#5c5c5c]">Female</p>
+                <p className="text-nowrap font-medium text-[#5c5c5c]">
+                  {job.tutorGenderPreference}
+                </p>
               </div>
             </div>
-          </div>
-          <div className="mb-6 flex items-center gap-16 text-sm">
             <div className="flex items-start gap-2">
               <svg
                 stroke="currentColor"
@@ -135,7 +216,7 @@ const TutorJobCard = ({ job }) => {
               <div>
                 <p>Tutoring Time</p>
                 <p className="text-nowrap font-medium text-[#5c5c5c]">
-                  07:00 PM
+                  {job.tutoringTime}
                 </p>
               </div>
             </div>
@@ -154,15 +235,11 @@ const TutorJobCard = ({ job }) => {
               <div>
                 <p>Tutoring Days</p>
                 <p className="text-nowrap font-medium text-[#5c5c5c]">
-                  3 Days / Week
+                  {job.daysPerWeek}
                 </p>
               </div>
             </div>
-          </div>
-
-          <div className="mb-6 flex  items-baseline gap-6">
-            {/* Location */}
-            <div className="min-w-1/2 flex items-baseline gap-2 text-sm">
+            <div className="flex items-start gap-2">
               <svg
                 stroke="currentColor"
                 fill="currentColor"
@@ -197,6 +274,7 @@ const TutorJobCard = ({ job }) => {
               </div>
             </div>
           </div>
+
           <div className="mb-6 flex  items-center justify-between gap-6">
             <div className="flex items-baseline gap-2 text-sm">
               <svg
@@ -219,10 +297,11 @@ const TutorJobCard = ({ job }) => {
             </div>
             <Link>
               <button
+                disabled={hasApplied}
                 onClick={handleApply}
                 className="  rounded-md text-sm font-medium  transition-all duration-300  border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 px-4 py-2 relative overflow-hidden"
                 type="button">
-                Details
+                {hasApplied ? "Already Applied" : "Apply"}
               </button>
             </Link>
           </div>
