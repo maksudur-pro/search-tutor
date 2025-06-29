@@ -77,9 +77,15 @@ const TutorJobCard = ({ job }) => {
             {job.title}
           </h3>
 
-          <p className="text-[12px] mb-3">
-            Posted Date : <span className="font-semibold">{job.date}</span>
-          </p>
+          <div className="flex items-center gap-4 mb-3">
+            <p className="text-[12px] ">
+              Job Id : <span className="font-semibold">{job.jobId}</span>
+            </p>
+            ||
+            <p className="text-[12px]">
+              Posted Date : <span className="font-semibold">{job.date}</span>
+            </p>
+          </div>
 
           <div className="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-sm">
             {/* Tuition Type */}

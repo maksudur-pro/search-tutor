@@ -51,20 +51,43 @@ const AppliedJobs = () => {
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] ">
       <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
-        {jobs.map((job) => (
+        {jobs.map((data) => (
           <div
-            key={job._id}
+            key={data.job._id}
             className="relative rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-4 lg:p-6 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg max-w-xl mb-6">
             <div className="text-[#8c8484]">
               <h3 className="mb-3 text-xl font-semibold text-[#2b2b2c]">
-                {job.title}{" "}
-                <span className="badge badge-primary text-white">Applied</span>
+                {data.job.title}{" "}
+                <span
+                  className={`badge text-white ${
+                    data.status === "pending"
+                      ? "bg-yellow-500"
+                      : data.status === "reviewed"
+                      ? "bg-blue-500"
+                      : data.status === "selected"
+                      ? "bg-green-600"
+                      : data.status === "rejected"
+                      ? "bg-red-500"
+                      : "bg-gray-400"
+                  }`}>
+                  {data.status}
+                </span>
               </h3>
-
-              <p className="text-[12px] mb-3">
-                Applied Date :{" "}
-                <span className="font-semibold">{job.date || "N/A"}</span>
-              </p>
+              <div className="flex items-center gap-4 mb-3">
+                <p className="text-[12px] ">
+                  Job Id :{" "}
+                  <span className="font-semibold">
+                    {data.job.jobId || "N/A"}
+                  </span>
+                </p>
+                ||
+                <p className="text-[12px]">
+                  Posted Date :{" "}
+                  <span className="font-semibold">
+                    {data.job.date || "N/A"}
+                  </span>
+                </p>
+              </div>
 
               <div className="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-sm">
                 {/* Tuition Type */}
@@ -73,7 +96,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Tuition Type</p>
                     <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
-                      {job.type}
+                      {data.job.type}
                     </p>
                   </div>
                 </div>
@@ -83,7 +106,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Student Gender</p>
                     <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
-                      {job.studentGender}
+                      {data.job.studentGender}
                     </p>
                   </div>
                 </div>
@@ -92,7 +115,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Category</p>
                     <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
-                      {job.category}
+                      {data.job.category}
                     </p>
                   </div>
                 </div>
@@ -101,7 +124,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Class</p>
                     <p className="text-nowrap font-medium text-[#5c5c5c]">
-                      {job.classLevel}
+                      {data.job.classLevel}
                     </p>
                   </div>
                 </div>
@@ -110,7 +133,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Salary</p>
                     <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
-                      {job.salary} BDT
+                      {data.job.salary} BDT
                     </p>
                   </div>
                 </div>
@@ -119,7 +142,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Preferred Tutor</p>
                     <p className="text-nowrap font-medium text-[#5c5c5c]">
-                      {job.tutorGenderPreference}
+                      {data.job.tutorGenderPreference}
                     </p>
                   </div>
                 </div>
@@ -128,7 +151,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Tutoring Time</p>
                     <p className="text-nowrap font-medium text-[#5c5c5c]">
-                      {job.tutoringTime}
+                      {data.job.tutoringTime}
                     </p>
                   </div>
                 </div>
@@ -137,7 +160,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>Tutoring Days</p>
                     <p className="text-nowrap font-medium text-[#5c5c5c]">
-                      {job.daysPerWeek}
+                      {data.job.daysPerWeek}
                     </p>
                   </div>
                 </div>
@@ -145,7 +168,9 @@ const AppliedJobs = () => {
                 <div className="flex items-start gap-2">
                   <div>
                     <p>Location</p>
-                    <p className="font-medium text-[#5c5c5c]">{job.location}</p>
+                    <p className="font-medium text-[#5c5c5c]">
+                      {data.job.location}
+                    </p>
                   </div>
                 </div>
 
@@ -153,7 +178,7 @@ const AppliedJobs = () => {
                   <div>
                     <p>No. of Students</p>
                     <p className="text-nowrap font-medium text-[#5c5c5c]">
-                      {job.studentsNumber || 1}
+                      {data.job.studentsNumber || 1}
                     </p>
                   </div>
                 </div>
@@ -161,9 +186,9 @@ const AppliedJobs = () => {
                   <div>
                     <p>Subjects</p>
                     <p className="font-medium text-[#5c5c5c]">
-                      {Array.isArray(job.subjects)
-                        ? job.subjects.join(", ")
-                        : job.subjects}
+                      {Array.isArray(data.job.subjects)
+                        ? data.job.subjects.join(", ")
+                        : data.job.subjects}
                     </p>
                   </div>
                 </div>

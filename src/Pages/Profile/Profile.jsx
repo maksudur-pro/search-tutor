@@ -27,22 +27,24 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row lg:flex-row ">
         <div className="w-full md:w-[40%] lg:w-[40%]">
           <div className="">
-            <div className="bg-white p-3 border-t-4 border-indigo-500">
+            <div className="bg-white p-6 rounded-sm shadow-sm text-center space-y-3 mb-4">
               <div className="image overflow-hidden">
                 <img
-                  className="h-auto w-full mx-auto"
+                  className="h-28 w-28 mx-auto rounded-full object-cover border-2 border-green-500 shadow-sm"
                   src={userInfo.image}
-                  alt=""
+                  alt="Profile"
                 />
               </div>
-              <h1 className="flex items-center text-gray-900 font-bold text-xl leading-8 my-1 gap-2">
-                <User size={16} />
-                {userInfo.name || "No data found"}
-              </h1>
-              <h3 className="flex items-center text-gray-600 font-semibold text-lg leading-6 gap-2">
-                <Mail size={16} />
-                {userInfo.email || "No data found"}
-              </h3>
+              <div className="flex flex-col items-start">
+                <h1 className="flex justify-center items-center text-gray-900 font-bold text-xl gap-2">
+                  <User size={18} />
+                  {userInfo.name || "No data found"}
+                </h1>
+                <h3 className="flex justify-center items-center text-gray-600 font-medium text-base gap-2">
+                  <Mail size={16} />
+                  {userInfo.email || "No data found"}
+                </h3>
+              </div>
             </div>
           </div>
         </div>

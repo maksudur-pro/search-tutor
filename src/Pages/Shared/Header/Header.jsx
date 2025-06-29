@@ -9,6 +9,7 @@ import {
   Home,
   LogIn,
   LogOut,
+  Mail,
   PlusCircle,
   Send,
   User,
@@ -150,6 +151,16 @@ const Header = () => {
               Post Job
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/applications-admin"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-bold" : ""
+              }>
+              <Send size={18} className="block md:hidden lg:hidden mr-2" />
+              Manage Applications
+            </NavLink>
+          </li>
         </>
       )}
     </>
@@ -224,37 +235,53 @@ const Header = () => {
                     <label
                       htmlFor="mobile-drawer"
                       className="drawer-overlay"></label>
-                    <ul className="menu p-4 w-60 min-h-full bg-base-100 text-base-content">
-                      <Link to={"/"}>
-                        <img
-                          className="w-36 md:w-[11.1rem] pb-2 mb-4 border-b-[1px] border-black"
-                          src="/search-tutor.png"
-                          alt=""
-                        />
-                      </Link>
-                      {navOption}
-
+                    <ul className="menu p-0 w-60 min-h-full bg-base-100 text-base-content">
                       {user ? (
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-2 py-2 mt-2 px-4 border border-red-500 text-red-500 rounded-md hover:bg-red-500 hover:text-white transition duration-200">
-                          <LogOut size={18} />
-                          Logout
-                        </button>
+                        <div className="px-5 pb-6 pt-8 bg-indigo-500">
+                          <img
+                            alt="profile image"
+                            width="90"
+                            height="90"
+                            className="mx-auto size-[90px] rounded-full border border-white object-cover p-1 bg-transparent"
+                            src={userInfo?.image}
+                          />
+                          <div className="mt-4 text-center text-sm text-white">
+                            <h2 className="mb-1 flex items-center justify-center gap-2 text-base font-semibold">
+                              {userInfo?.name || "No data found"}
+                            </h2>
+                            <p>{userInfo?.email || "No data found"}</p>
+                          </div>
+                        </div>
                       ) : (
-                        <NavLink
-                          to="/signin"
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 py-2 mt-2 px-4 rounded-md transition duration-200 ${
-                              isActive
-                                ? "bg-blue-600 text-white font-semibold"
-                                : "border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
-                            }`
-                          }>
-                          <LogIn size={18} />
-                          Sign In
-                        </NavLink>
+                        <div className="px-5 pt-8">
+                          <Link to={"/"}>
+                            <img
+                              className="w-36 md:w-[11.1rem] pb-2 mb-4 border-b-[1px] border-black"
+                              src="/search-tutor.png"
+                              alt=""
+                            />
+                          </Link>
+                        </div>
                       )}
+
+                      <div className="p-4 ">
+                        {navOption}
+
+                        {user ? (
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 py-2 mt-2 px-4 w-full border border-red-500 text-red-500 rounded-md hover:bg-red-500 hover:text-white transition duration-200">
+                            <LogOut size={18} />
+                            Logout
+                          </button>
+                        ) : (
+                          <Link
+                            to={"/signup"}
+                            className="btn bg-indigo-500 py-2 px-8 text-white block md:hidden">
+                            Become a Tutor
+                          </Link>
+                        )}
+                      </div>
                     </ul>
                   </div>
                 </div>
