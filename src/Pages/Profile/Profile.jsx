@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import {
   User,
@@ -7,10 +7,158 @@ import {
   MapPin,
   Mail,
   AlertCircle,
+  GraduationCap,
+  Pencil,
+  Camera,
+  CloudUpload,
 } from "lucide-react";
+import Swal from "sweetalert2";
 
 const Profile = () => {
-  const { userInfo, loading } = useContext(AuthContext);
+  const { userInfo, loading, setUserData } = useContext(AuthContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    gender: "",
+    city: "",
+    location: "",
+    fbLink: "",
+    institute: "",
+    idNo: "",
+    department: "",
+    degree: "",
+    passingYear: "",
+    image: "",
+    nid: "",
+  });
+
+  useEffect(() => {
+    if (userInfo) {
+      setFormData({
+        name: userInfo.name || "",
+        email: userInfo.email || "",
+        phone: userInfo.phone || "",
+        gender: userInfo.gender || "",
+        city: userInfo.city || "",
+        location: userInfo.location || "",
+        fbLink: userInfo.fbLink || "",
+        institute: userInfo.institute || "",
+        idNo: userInfo.idNo || "",
+        department: userInfo.department || "",
+        degree: userInfo.degree || "",
+        passingYear: userInfo.passingYear || "",
+        image: userInfo.image || "",
+        nid: userInfo.nid || "",
+      });
+    }
+  }, [userInfo]);
+
+  if (loading || !userInfo) {
+    return (
+      <div className="flex justify-center items-center h-screen w-screen bg-white">
+        <progress className="progress w-56"></progress>
+      </div>
+    );
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  // Upload image to Cloudinary, update formData with the URL
+  const uploadImage = async (file, fieldName) => {
+    if (!file) return;
+
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "user_profile_img");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dvrn8ytwm/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const fileData = await res.json();
+      if (fileData.secure_url) {
+        setFormData((prev) => ({
+          ...prev,
+          [fieldName]: fileData.secure_url,
+        }));
+        Swal.fire({
+          icon: "success",
+          title: `${fieldName === "image" ? "Profile" : "NID"} image uploaded!`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "Please try again.",
+      });
+    }
+  };
+
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    uploadImage(file, "image");
+  };
+
+  const handleNidImageChange = (e) => {
+    const file = e.target.files[0];
+    uploadImage(file, "nid");
+  };
+
+  // Save all changes to backend
+  const handleSave = async () => {
+    try {
+      const response = await fetch(
+        `https://search-tutor-server.vercel.app/users/${userInfo.uid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
+      }
+
+      const updatedUser = await response.json();
+
+      // Update global userInfo in context
+      setUserData(updatedUser);
+
+      Swal.fire({
+        icon: "success",
+        title: "Profile updated successfully",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Update failed",
+        text: error.message,
+      });
+    }
+  };
 
   if (loading || !userInfo) {
     return (
@@ -26,31 +174,61 @@ const Profile = () => {
         {/* Sidebar */}
         <div className="rounded-xl bg-white border border-indigo-100 shadow-md p-4 pb-8 text-center mb-4 w-full lg:w-[40%]">
           <div className="flex justify-center">
-            <div className="size-fit min-w-[100px]">
+            <div className=" relative size-fit min-w-[100px]">
               <img
-                alt={userInfo?.name}
+                alt={formData?.name}
                 width="100"
                 height="100"
                 className="object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
-                src={userInfo?.image}
+                src={formData.image || "/default-profile.png"}
               />
+              {isEditing && (
+                <>
+                  {/* Hidden File Input */}
+                  <input
+                    id="profileImageUpload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleProfileImageChange}
+                  />
+
+                  {/* Edit Icon */}
+                  <label
+                    htmlFor="profileImageUpload"
+                    className="absolute bottom-0 right-0 cursor-pointer"
+                    title="Change Profile Picture">
+                    <div className="flex size-[2.1rem] items-center justify-center rounded-full border-2 border-white bg-indigo-500 text-white shadow-md hover:bg-indigo-600 transition">
+                      <Camera size={18} />
+                    </div>
+                  </label>
+                </>
+              )}
             </div>
           </div>
           <div className="mt-2 text-center">
             <h2 className="flex gap-2 text-xl font-bold items-center justify-center lg:text-2xl">
-              <span className="w-full md:w-fit">{userInfo?.name}</span>
+              <span className="w-full md:w-fit">{formData?.name}</span>
             </h2>
             {/* <p className="my-1 font-bold text-[rgba(34,34,34,0.5)] text-xs lg:my-2">
               Guardian / Student ID: 405284
             </p> */}
+            <button onClick={handleEditToggle} className="btn w-full my-4">
+              {isEditing ? "Cancel" : "Edit Information"}
+            </button>
+            {isEditing && (
+              <button onClick={handleSave} className="btn w-full ">
+                Save Changes
+              </button>
+            )}
           </div>
           <div className="mb-2 mt-4 text-left block">
             <p className="flex items-center gap-2 font-bold">
               <Mail size={16} />
               Email
             </p>
-            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {userInfo.email || "No data found"}
+            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {formData.email || "No data found"}
             </p>
           </div>
           <div className="mb-2 mt-4 text-left block">
@@ -58,8 +236,9 @@ const Profile = () => {
               <Phone size={16} />
               Phone Number
             </p>
-            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {userInfo.phone || "No data found"}
+
+            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {formData.phone || "No data found"}
             </p>
           </div>
           <div className="mb-2 mt-4 text-left block">
@@ -67,9 +246,9 @@ const Profile = () => {
               <MapPin size={16} />
               Address
             </p>
-            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {userInfo.city || "No data found"},{" "}
-              {userInfo.location || "No data found"}
+            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {formData.city || "No data found"},{" "}
+              {formData.location || "No data found"}
             </p>
           </div>
         </div>
@@ -88,103 +267,218 @@ const Profile = () => {
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Name
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    {userInfo?.name}
+
+                    {formData.name || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Contact Number
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    {userInfo.phone || "No data found"}
+
+                    {formData.phone || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Email
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="break-words">
-                      {userInfo.email || "No data found"}
+
+                    <span className="break-words text-[12px]">
+                      {formData.email || (
+                        <span className="text-red-600">Not Given</span>
+                      )}
                     </span>
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Gender
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
+
                     <span className="capitalize">
-                      {userInfo.gender || "No data found"}
+                      {formData.gender || (
+                        <span className="text-red-600">Not Given</span>
+                      )}
                     </span>
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Facebook / LinkedIn
+                      Facebook
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="text-red-600">Not Given</span>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.fbLink}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="fbLink"
+                        placeholder="Enter Facebook or LinkedIn URL"
+                      />
+                    ) : (
+                      <>
+                        {(
+                          <a
+                            href={formData.fbLink}
+                            className="text-blue-500 font-medium">
+                            Link
+                          </a>
+                        ) || <span className="text-red-600">Not Given</span>}
+                      </>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       City
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    {userInfo.location || "No data found"}
+
+                    {formData.location || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Location
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    {userInfo.city || "No data found"}
+
+                    {formData.city || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Address
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    {/* <span className="text-red-600">Not Given</span> */}
-                    {userInfo.city || "No data found"},{" "}
-                    {userInfo.location || "No data found"}
+                    {formData.city || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
+                    ,{" "}
+                    {formData.location || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Emergency Info */}
+            {/* Eduction */}
             <div className="mt-4">
               <h2 className="flex items-center justify-center gap-3 text-lg font-semibold md:justify-start md:text-xl">
-                <AlertCircle className="w-5 h-5" />
-                Emergency Information
+                <GraduationCap className="w-6 h-6" />
+                Educational Information
               </h2>
-              <div className="mt-3 flex flex-col gap-2 text-sm text-[rgba(34,34,34,0.5)] md:ms-9 xl:flex-row xl:gap-4">
+              <div className="mt-3 flex flex-col gap-2 text-sm text-[rgba(34,34,34,0.5)] md:ms-9 ">
                 <div className="space-y-1 ">
                   <p className="flex border-y border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Name
+                      Current Institute
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="text-red-600">Not Given</span>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.institute}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="institute"
+                        placeholder="Enter your current institute"
+                      />
+                    ) : (
+                      <>
+                        {formData.institute || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Relation
+                      ID Card No
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="text-red-600">Not Given</span>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.idNo}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="idNo"
+                        placeholder="Enter your ID card number"
+                      />
+                    ) : (
+                      <>
+                        {formData?.idNo || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Contact Number
+                      Department / Class
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="text-red-600">Not Given</span>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.department}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="department"
+                        placeholder="Enter your department or class"
+                      />
+                    ) : (
+                      <>
+                        {formData?.department || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Address
+                      Previous Exam / Degree
                     </strong>
-                    <span className="me-1 font-semibold text-black">:</span>
-                    <span className="text-red-600">Not Given</span>
+                    {isEditing ? (
+                      <input
+                        value={formData.degree}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="degree"
+                        placeholder="Enter your previous exam or degree"
+                      />
+                    ) : (
+                      <>
+                        {formData.degree || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Year of Passing
+                    </strong>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.passingYear}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="passingYear"
+                        placeholder="Enter your year of passing"
+                      />
+                    ) : (
+                      <>
+                        {formData.passingYear || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -197,24 +491,48 @@ const Profile = () => {
                 Verification & Security
               </h2>
             </div>
+
             <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
-              <p class=" ms-0 text-red-600 md:ms-8">
-                You have not uploaded any credential yet
-              </p>
-              {/* <div className="md:ms-8">
+              {isEditing ? (
+                <>
+                  {/* Hidden File Input */}
+                  <input
+                    id="nidImageUpload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleNidImageChange}
+                  />
+                  {/* Clickable Upload Box */}
+                  <label htmlFor="nidImageUpload">
+                    <div className="relative h-44 w-full min-w-[13.5rem] md:w-[13.75rem] cursor-pointer rounded-md bg-[#f2f5fc] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
+                      <div className="flex h-full flex-col items-center justify-center border-[3px] border-dotted border-indigo-500 text-center text-indigo-500">
+                        <CloudUpload className="mx-auto" size={60} />
+                        <p>nid</p>
+                      </div>
+                    </div>
+                  </label>
+                </>
+              ) : formData.nid ? (
+                <div className="md:ms-8">
                   <div className="relative h-44 overflow-hidden rounded-sm bg-[#ddd] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
                     <img
                       alt="NID"
                       width="220"
                       height="100"
                       className="mx-auto max-h-[9.5rem] object-cover"
-                      src="https://caretutor-space-file.nyc3.digitaloceanspaces.com/assets/upload/guardian/credential/405284_434a9f5679ce43ea9526b7480955f755.png"
+                      src={formData.nid}
                     />
                     <p className="absolute bottom-3 left-3 w-[calc(100%-24px)] bg-[#9b9b9ba6] p-2 text-center text-xs font-bold text-white">
                       NID
                     </p>
                   </div>
-                </div> */}
+                </div>
+              ) : (
+                <p className="ms-0 text-red-600 md:ms-8">
+                  You have not uploaded any credential yet
+                </p>
+              )}
             </div>
           </div>
         </div>
