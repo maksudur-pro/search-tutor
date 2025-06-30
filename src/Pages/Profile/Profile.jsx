@@ -1,19 +1,17 @@
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import {
-  UserCheck,
   User,
-  Mars,
+  ShieldCheck,
   Phone,
-  Home,
   MapPin,
-  HashIcon,
   Mail,
+  AlertCircle,
 } from "lucide-react";
 
 const Profile = () => {
   const { userInfo, loading } = useContext(AuthContext);
-  console.log(userInfo);
+
   if (loading || !userInfo) {
     return (
       <div className="flex justify-center items-center h-screen w-screen bg-white">
@@ -24,197 +22,201 @@ const Profile = () => {
 
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10 p-4">
-      <div className="flex flex-col md:flex-row lg:flex-row ">
-        <div className="w-full md:w-[40%] lg:w-[40%]">
-          <div className="">
-            <div className="bg-white p-6 rounded-sm shadow-sm text-center space-y-3 mb-4">
-              <div className="image overflow-hidden">
-                <img
-                  className="h-28 w-28 mx-auto rounded-full object-cover border-2 border-green-500 shadow-sm"
-                  src={userInfo.image}
-                  alt="Profile"
-                />
-              </div>
-              <div className="flex flex-col items-start">
-                <h1 className="flex justify-center items-center text-gray-900 font-bold text-xl gap-2">
-                  <User size={18} />
-                  {userInfo.name || "No data found"}
-                </h1>
-                <h3 className="flex justify-center items-center text-gray-600 font-medium text-base gap-2">
-                  <Mail size={16} />
-                  {userInfo.email || "No data found"}
-                </h3>
-              </div>
+      <div className="flex items-start flex-col md:flex-row lg:flex-row gap-4 w-full">
+        {/* Sidebar */}
+        <div className="rounded-xl bg-white border border-indigo-100 shadow-md p-4 pb-8 text-center mb-4 w-full lg:w-[40%]">
+          <div className="flex justify-center">
+            <div className="size-fit min-w-[100px]">
+              <img
+                alt={userInfo?.name}
+                width="100"
+                height="100"
+                className="object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
+                src={userInfo?.image}
+              />
             </div>
+          </div>
+          <div className="mt-2 text-center">
+            <h2 className="flex gap-2 text-xl font-bold items-center justify-center lg:text-2xl">
+              <span className="w-full md:w-fit">{userInfo?.name}</span>
+            </h2>
+            {/* <p className="my-1 font-bold text-[rgba(34,34,34,0.5)] text-xs lg:my-2">
+              Guardian / Student ID: 405284
+            </p> */}
+          </div>
+          <div className="mb-2 mt-4 text-left block">
+            <p className="flex items-center gap-2 font-bold">
+              <Mail size={16} />
+              Email
+            </p>
+            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {userInfo.email || "No data found"}
+            </p>
+          </div>
+          <div className="mb-2 mt-4 text-left block">
+            <p className="flex items-center gap-2 font-bold">
+              <Phone size={16} />
+              Phone Number
+            </p>
+            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {userInfo.phone || "No data found"}
+            </p>
+          </div>
+          <div className="mb-2 mt-4 text-left block">
+            <p className="flex items-center gap-2 font-bold">
+              <MapPin size={16} />
+              Address
+            </p>
+            <p class="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+              {userInfo.city || "No data found"},{" "}
+              {userInfo.location || "No data found"}
+            </p>
           </div>
         </div>
-        <div className="w-full md:w-[60%] lg:w-[60%]">
-          <div className=" mx-2">
-            <div className="bg-white p-3 shadow-sm rounded-sm">
-              <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
-                <span className="text-indigo-500">
-                  <User className="h-5 w-5" />
-                </span>
-                <span className="tracking-wide">About</span>
-              </div>
-
-              <div className="text-gray-700">
-                <div className="grid md:grid-cols-2 text-sm">
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <HashIcon size={16} />
-                      Tutor Id
-                    </div>
-                    <div className="px-4 py-2">1254</div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <UserCheck size={16} />
-                      Account Type
-                    </div>
-                    <div className="px-4 py-2">
-                      {userInfo.accountType || "No data found"}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <User size={16} />
-                      Full Name
-                    </div>
-                    <div className="px-4 py-2">
-                      {userInfo.name || "No data found"}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <Mars size={16} />
+        {/* Sidebar end */}
+        <div className="rounded-2xl bg-white border border-indigo-100 shadow-md p-4 pb-8 md:p-6 w-full lg:w-[60%]">
+          <div className="md:px-3">
+            {/* Personal Information */}
+            <div className="mt-4">
+              <h2 className="flex items-center justify-center gap-3 text-lg font-semibold md:justify-start md:text-xl">
+                <User className="w-5 h-5" />
+                Personal Information
+              </h2>
+              <div className="mt-3 space-y-1 text-sm text-[rgba(34,34,34,0.5)] md:ms-9">
+                <div className="space-y-1">
+                  <p className="flex border-y border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Name
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    {userInfo?.name}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Contact Number
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    {userInfo.phone || "No data found"}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Email
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="break-words">
+                      {userInfo.email || "No data found"}
+                    </span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Gender
-                    </div>
-                    <div className="px-4 py-2">
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="capitalize">
                       {userInfo.gender || "No data found"}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <Phone size={16} />
-                      Contact No.
-                    </div>
-                    <div className="px-4 py-2">
-                      {userInfo.phone || "No data found"}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <Home size={16} />
+                    </span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Facebook / LinkedIn
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="text-red-600">Not Given</span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       City
-                    </div>
-                    <div className="px-4 py-2">
-                      {userInfo.city || "No data found"}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 items-center">
-                    <div className="px-4 py-2 font-semibold flex items-center gap-1">
-                      <MapPin size={16} />
-                      District
-                    </div>
-                    <div className="px-4 py-2">
-                      {userInfo.location || "No data found"}
-                    </div>
-                  </div>
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    {userInfo.location || "No data found"}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Location
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    {userInfo.city || "No data found"}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Address
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    {/* <span className="text-red-600">Not Given</span> */}
+                    {userInfo.city || "No data found"},{" "}
+                    {userInfo.location || "No data found"}
+                  </p>
                 </div>
               </div>
+            </div>
+
+            {/* Emergency Info */}
+            <div className="mt-4">
+              <h2 className="flex items-center justify-center gap-3 text-lg font-semibold md:justify-start md:text-xl">
+                <AlertCircle className="w-5 h-5" />
+                Emergency Information
+              </h2>
+              <div className="mt-3 flex flex-col gap-2 text-sm text-[rgba(34,34,34,0.5)] md:ms-9 xl:flex-row xl:gap-4">
+                <div className="space-y-1 ">
+                  <p className="flex border-y border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Name
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="text-red-600">Not Given</span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Relation
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="text-red-600">Not Given</span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Contact Number
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="text-red-600">Not Given</span>
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Address
+                    </strong>
+                    <span className="me-1 font-semibold text-black">:</span>
+                    <span className="text-red-600">Not Given</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Verification */}
+            <div className="mt-4">
+              <h2 className="flex items-center justify-center gap-3 text-lg font-semibold md:justify-start md:text-xl">
+                <ShieldCheck className="w-5 h-5" />
+                Verification & Security
+              </h2>
+            </div>
+            <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
+              <p class=" ms-0 text-red-600 md:ms-8">
+                You have not uploaded any credential yet
+              </p>
+              {/* <div className="md:ms-8">
+                  <div className="relative h-44 overflow-hidden rounded-sm bg-[#ddd] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
+                    <img
+                      alt="NID"
+                      width="220"
+                      height="100"
+                      className="mx-auto max-h-[9.5rem] object-cover"
+                      src="https://caretutor-space-file.nyc3.digitaloceanspaces.com/assets/upload/guardian/credential/405284_434a9f5679ce43ea9526b7480955f755.png"
+                    />
+                    <p className="absolute bottom-3 left-3 w-[calc(100%-24px)] bg-[#9b9b9ba6] p-2 text-center text-xs font-bold text-white">
+                      NID
+                    </p>
+                  </div>
+                </div> */}
             </div>
           </div>
-          {/* <form className="mt-0 w-full gap-4 rounded-2xl border border-[rgba(6,53,85,0.16)] bg-white px-5 py-8 text-black md:mt-5 md:px-7">
-            <div className="flex flex-col gap-8 md:flex-row">
-              <div className="md:w-1/2">
-                <label className="text-lg">Name</label>
-                <input
-                  readOnly
-                  value={userInfo.name || ""}
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="text"
-                  name="name"
-                />
-              </div>
-              <div className="md:w-1/2">
-                <label className="text-lg">Account Type</label>
-                <input
-                  readOnly
-                  value={userInfo.accountType || ""}
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="text"
-                  name="accountType"
-                />
-              </div>
-            </div>
-
-            <div className="mt-8 flex flex-col gap-8 md:flex-row">
-              <div className="md:w-1/2">
-                <p className="text-lg">Gender</p>
-                <div className="mt-3 flex gap-7">
-                  <input
-                    readOnly
-                    value={userInfo.gender || ""}
-                    className="w-full border-b border-black/50 py-2 focus:outline-none"
-                    type="text"
-                    name="gender"
-                  />
-                </div>
-              </div>
-              <div className="md:w-1/2">
-                <label className="text-lg">Phone Number</label>
-                <input
-                  value={userInfo.phone || ""}
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="text"
-                  name="phoneNumber"
-                  readOnly
-                />
-              </div>
-            </div>
-
-            <div className="mt-8 flex flex-col gap-8 md:flex-row">
-              <div className="md:w-1/2">
-                <label className="text-lg">Email</label>
-                <input
-                  value={userInfo.email || ""}
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="email"
-                  name="email"
-                  readOnly
-                />
-              </div>
-              <div className="md:w-1/2">
-                <label className="text-lg">City</label>
-                <input
-                  value={userInfo.city || ""}
-                  name="city"
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="text"
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="mt-8 flex flex-col gap-8 md:flex-row">
-              <div className="md:w-1/2">
-                <label className="text-lg">Location</label>
-                <input
-                  value={userInfo.location || ""}
-                  name="location"
-                  className="w-full border-b border-black/50 py-2 focus:outline-none"
-                  type="text"
-                  readOnly
-                />
-              </div>
-            </div>
-          </form> */}
         </div>
       </div>
     </div>
