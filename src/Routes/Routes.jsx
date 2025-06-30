@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/applications-admin",
+        path: "/admin/applications",
         element: (
           <RoleRoute allowedRoles={["admin"]}>
             <AdminApplications />

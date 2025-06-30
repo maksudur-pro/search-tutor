@@ -14,11 +14,14 @@ const Main = () => {
           <progress className="progress w-56"></progress>
         </div>
       ) : (
-        <div>
-          <TopBanner></TopBanner>
-          <Header></Header>
-          <Outlet></Outlet>
-          <Footer></Footer>
+        <div className="flex flex-col min-h-screen">
+          <TopBanner />
+          <Header />
+          {/* This main wrapper will take all available vertical space */}
+          <main className="flex-grow">
+            <Outlet />
+          </main>
+          <Footer />
         </div>
       )}
     </>

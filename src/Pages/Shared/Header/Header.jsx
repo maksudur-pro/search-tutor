@@ -153,7 +153,7 @@ const Header = () => {
           </li>
           <li>
             <NavLink
-              to="/applications-admin"
+              to="/admin/applications"
               className={({ isActive }) =>
                 isActive ? "text-blue-600 font-bold" : ""
               }>
