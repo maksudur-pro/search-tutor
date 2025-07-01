@@ -14,6 +14,7 @@ import {
   Send,
   User,
   UserPlus,
+  UserSquare,
 } from "lucide-react";
 
 const Header = () => {
@@ -157,8 +158,24 @@ const Header = () => {
               className={({ isActive }) =>
                 isActive ? "text-blue-600 font-bold" : ""
               }>
-              <Send size={18} className="block md:hidden lg:hidden mr-2" />
+              <PlusCircle
+                size={18}
+                className="block md:hidden lg:hidden mr-2"
+              />
               Manage Applications
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/tutors"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-bold" : ""
+              }>
+              <UserSquare
+                size={18}
+                className="block md:hidden lg:hidden mr-2"
+              />
+              Tutors
             </NavLink>
           </li>
         </>
