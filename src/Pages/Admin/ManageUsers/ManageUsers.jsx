@@ -53,38 +53,38 @@ const ManageUsers = () => {
       );
   };
 
-  const handleDeleteUser = (uid) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This action cannot be undone.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete user!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`https://search-tutor-server.vercel.app/users/${uid}`, {
-          method: "DELETE",
-        })
-          .then((res) => {
-            if (!res.ok) throw new Error("Failed to delete user");
-            return res.json();
-          })
-          .then(() => {
-            Swal.fire("Deleted!", "User has been deleted.", "success");
-            fetchUsers(); // Refresh the user list
-          })
-          .catch(() => {
-            Swal.fire(
-              "Error!",
-              "Failed to delete user. Please try again.",
-              "error"
-            );
-          });
-      }
-    });
-  };
+  // const handleDeleteUser = (uid) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "This action cannot be undone.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "Yes, delete user!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       fetch(`https://search-tutor-server.vercel.app/users/${uid}`, {
+  //         method: "DELETE",
+  //       })
+  //         .then((res) => {
+  //           if (!res.ok) throw new Error("Failed to delete user");
+  //           return res.json();
+  //         })
+  //         .then(() => {
+  //           Swal.fire("Deleted!", "User has been deleted.", "success");
+  //           fetchUsers(); // Refresh the user list
+  //         })
+  //         .catch(() => {
+  //           Swal.fire(
+  //             "Error!",
+  //             "Failed to delete user. Please try again.",
+  //             "error"
+  //           );
+  //         });
+  //     }
+  //   });
+  // };
 
   if (loading || !userInfo) {
     return (
@@ -154,13 +154,13 @@ const ManageUsers = () => {
                       Make Guardian
                     </button>
 
-                    {/* Delete Button */}
+                    {/* Delete Button
                     <button
                       onClick={() => handleDeleteUser(user.uid)}
                       className="badge badge-outline border border-red-500 text-red-500 cursor-pointer px-3 py-1 rounded-md font-medium flex items-center gap-1 hover:bg-red-100 transition-colors duration-200">
                       <Trash2 size={16} />
                       Delete
-                    </button>
+                    </button> */}
                   </>
                 )}
               </div>

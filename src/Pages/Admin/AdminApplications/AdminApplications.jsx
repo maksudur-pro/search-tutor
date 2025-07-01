@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AdminApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -7,6 +8,7 @@ const AdminApplications = () => {
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const fetchApplications = async () => {
     try {
@@ -113,18 +115,11 @@ const AdminApplications = () => {
             <div className="space-y-4">
               {group.applications.map((app) => {
                 const user = app.userDetails || app.user;
-
                 return (
                   <div
                     key={app._id}
                     className="border rounded-lg p-4 shadow-sm bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="mb-3 sm:mb-0">
-                      <img
-                        className="h-28 w-28 rounded-md object-cover "
-                        src={user?.image}
-                        alt="Profile"
-                      />
-
                       <p className="text-sm text-gray-600 font-semibold">
                         {user?.name || "Unknown Name"}
                       </p>
@@ -142,6 +137,11 @@ const AdminApplications = () => {
                           {new Date(app.appliedAt).toLocaleDateString()}
                         </p>
                       </div>
+                      <button
+                        className="btn my-2"
+                        onClick={() => navigate(`/tutor/${user.uid}`)}>
+                        see tutor info
+                      </button>
                     </div>
 
                     <div>

@@ -14,6 +14,7 @@ import TuitionRequests from "../Pages/Admin/TuitionRequests/TuitionRequests";
 import PostJob from "../Pages/Admin/PostJob/PostJob";
 import AppliedJobs from "../Pages/AppliedJobs/AppliedJobs";
 import AdminApplications from "../Pages/Admin/AdminApplications/AdminApplications";
+import TutorDetailsPage from "../Pages/Admin/TutorDetailsPage/TutorDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allowedRoles={["admin"]}>
             <TuitionRequests />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/tutor/:uid",
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <TutorDetailsPage />
           </RoleRoute>
         ),
       },
