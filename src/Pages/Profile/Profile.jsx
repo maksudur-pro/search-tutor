@@ -311,20 +311,24 @@ const Profile = () => {
                       <input
                         value={formData.fbLink}
                         onChange={handleChange}
-                        className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
+                        className="w-full border-b border-black/50 focus:border-b-2 focus:outline-none"
                         type="text"
                         name="fbLink"
-                        placeholder="Enter Facebook or LinkedIn URL"
+                        placeholder="Enter Facebook URL"
                       />
                     ) : (
                       <>
-                        {(
+                        {formData.fbLink ? (
                           <a
                             href={formData.fbLink}
-                            className="text-blue-500 font-medium">
+                            className="text-blue-500 font-medium"
+                            target="_blank"
+                            rel="noopener noreferrer">
                             Link
                           </a>
-                        ) || <span className="text-red-600">Not Given</span>}
+                        ) : (
+                          <span className="text-red-600">Not Given</span>
+                        )}
                       </>
                     )}
                   </p>
