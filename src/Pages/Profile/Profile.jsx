@@ -94,12 +94,12 @@ const Profile = () => {
           ...prev,
           [fieldName]: fileData.secure_url,
         }));
-        Swal.fire({
-          icon: "success",
-          title: `${fieldName === "image" ? "Profile" : "NID"} image uploaded!`,
-          timer: 1500,
-          showConfirmButton: false,
-        });
+        // Swal.fire({
+        //   icon: "success",
+        //   title: `${fieldName === "image" ? "Profile" : "NID"} image uploaded!`,
+        //   timer: 1500,
+        //   showConfirmButton: false,
+        // });
       }
     } catch {
       Swal.fire({
@@ -177,11 +177,10 @@ const Profile = () => {
             <div className=" relative size-fit min-w-[100px]">
               <img
                 alt={formData?.name}
-                width="100"
-                height="100"
-                className="object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
-                src={formData.image || "/default-profile.png"}
+                className="w-36 h-36 object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
+                src={formData.image || "https://i.pravatar.cc/300"}
               />
+
               {isEditing && (
                 <>
                   {/* Hidden File Input */}
@@ -493,7 +492,7 @@ const Profile = () => {
             </div>
 
             <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
-              {isEditing ? (
+              {isEditing && (
                 <>
                   {/* Hidden File Input */}
                   <input
@@ -513,7 +512,8 @@ const Profile = () => {
                     </div>
                   </label>
                 </>
-              ) : formData.nid ? (
+              )}
+              {formData.nid && (
                 <div className="md:ms-8">
                   <div className="relative h-44 overflow-hidden rounded-sm bg-[#ddd] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
                     <img
@@ -528,8 +528,9 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
-              ) : (
-                <p className="ms-0 text-red-600 md:ms-8">
+              )}
+              {formData.nid === "" && (
+                <p className="ms-0 text-red-600 md:ms-8 my-4">
                   You have not uploaded any credential yet
                 </p>
               )}
