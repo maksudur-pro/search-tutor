@@ -1,19 +1,21 @@
-// components/TutorJobCard.jsx
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../providers/AuthProvider";
 import axios from "axios";
-import Swal from "sweetalert2";
-import { Share, Share2 } from "lucide-react";
 
-const TutorJobCard = ({ job }) => {
+const JobDetails = () => {
+  const { id } = useParams();
   const { user } = useContext(AuthContext);
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [hasApplied, setHasApplied] = useState(false);
 
   // Fetch if user has applied
   useEffect(() => {
-    if (user && job._id) {
+    if (user && job) {
       axios
         .get(`https://search-tutor-server.vercel.app/applications/check`, {
           params: { jobId: job._id, userId: user.uid },
@@ -23,7 +25,7 @@ const TutorJobCard = ({ job }) => {
         })
         .catch((err) => console.error(err));
     }
-  }, [user, job._id]);
+  }, [user, job]);
 
   const handleApply = async () => {
     if (!user) {
@@ -70,25 +72,25 @@ const TutorJobCard = ({ job }) => {
     }
   };
 
-  const handleShare = (job) => {
-    const shareUrl = `${window.location.origin}/job/${job._id}`;
-    if (navigator.share) {
-      navigator
-        .share({
-          title: job.title,
-          text: "Check out this tutor job!",
-          url: shareUrl,
-        })
-        .catch((err) => console.error("Error sharing", err));
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert("Link copied to clipboard!");
-    }
-  };
+  useEffect(() => {
+    fetch(`https://search-tutor-server.vercel.app/jobs/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setJob(data.data);
+        } else {
+          setError("Job not found");
+        }
+      })
+      .catch(() => setError("Error fetching job"))
+      .finally(() => setLoading(false));
+  }, [id]);
 
+  if (loading) return <p className="p-4 text-center">Loading job...</p>;
+  if (error) return <p className="p-4 text-red-500 text-center">{error}</p>;
   return (
-    <>
-      <div className="relative  rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-4 lg:p-6 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
+    <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-8 p-4">
+      <div className="relative mb-10 rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-4 lg:p-6 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
         <div className="text-[#8c8484]">
           <h3 className="mb-3 text-xl font-semibold text-[#2b2b2c] ">
             {job.title}
@@ -296,6 +298,9 @@ const TutorJobCard = ({ job }) => {
                 <p className="text-nowrap font-medium text-[#5c5c5c]">1</p>
               </div>
             </div>
+          </div>
+
+          <div className="mb-6 flex  items-center justify-between gap-6">
             <div className="flex items-baseline gap-2 text-sm">
               <svg
                 stroke="currentColor"
@@ -315,9 +320,6 @@ const TutorJobCard = ({ job }) => {
                 </p>
               </div>
             </div>
-          </div>
-
-          <div className="mb-6 flex  items-center justify-between gap-6">
             <Link>
               <button
                 disabled={hasApplied}
@@ -327,17 +329,21 @@ const TutorJobCard = ({ job }) => {
                 {hasApplied ? "Already Applied" : "Apply"}
               </button>
             </Link>
-            <button
-              onClick={() => handleShare(job)}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium hover:bg-gray-100 py-2 h-8 px-3 text-sm text-gray-600 gap-1">
-              <Share2 size={15} className="me-1.5" />
-              Share
-            </button>
           </div>
         </div>
       </div>
-    </>
+      <div className="text-center mb-6">
+        <p className="text-gray-600 text-sm">
+          Looking for more tuition jobs?{" "}
+          <Link
+            to="/job-list"
+            className="text-indigo-600 font-medium hover:underline mb-4">
+            Click here for all jobs
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 };
 
-export default TutorJobCard;
+export default JobDetails;

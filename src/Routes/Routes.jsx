@@ -16,6 +16,7 @@ import AppliedJobs from "../Pages/AppliedJobs/AppliedJobs";
 import AdminApplications from "../Pages/Admin/AdminApplications/AdminApplications";
 import TutorDetailsPage from "../Pages/Admin/TutorDetailsPage/TutorDetailsPage";
 import Tutors from "../Pages/Admin/Tutors/Tutors";
+import JobDetails from "../Pages/JobDetails/JobDetails";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: "/job-list",
         element: <JobBoard />,
+      },
+      {
+        path: "/job/:id",
+        element: <JobDetails />,
       },
       {
         path: "/applied-jobs",
