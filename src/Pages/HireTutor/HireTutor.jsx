@@ -7,7 +7,7 @@ import daysPerWeekOptions from "../../assets/daysPerWeekOptions.json";
 import tuitionTypeOptions from "../../assets/tuitionTypeOptions.json";
 import categoryOptions from "../../assets/categoryOptions.json";
 import cityOptions from "../../assets/cityOptions.json";
-import locationOptionsByCity from "../../assets/locationOptionsByCity.json";
+
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -22,18 +22,10 @@ const HireTutor = () => {
   } = useForm();
 
   const [city, setCity] = useState([]);
-  const [location, setLocation] = useState([]);
 
   const handleCityChange = (val) => {
     setCity(val);
-    setLocation([]);
     setValue("city", val[0]?.value || "");
-    setValue("location", ""); // clear location value when city changes
-  };
-
-  const handleLocationChange = (val) => {
-    setLocation(val);
-    setValue("location", val[0]?.value || "");
   };
 
   const onSubmit = (data) => {
@@ -202,30 +194,17 @@ const HireTutor = () => {
 
               <div className="md:w-1/2">
                 <label className="text-sm">
-                  Location <span className="text-red-500">*</span>
+                  Address Details <span className="text-red-500">*</span>
                 </label>
-                <Select
-                  options={
-                    city.length > 0
-                      ? locationOptionsByCity[city[0].value] || []
-                      : []
-                  }
-                  values={location}
-                  onChange={handleLocationChange}
-                  placeholder={
-                    city.length > 0
-                      ? "Select Location"
-                      : "Please select City first"
-                  }
-                  dropdownPosition="auto"
-                  disabled={city.length === 0}
-                />
                 <input
-                  type="hidden"
+                  placeholder="location"
+                  className="w-full border px-2 border-black/30 py-2  focus:outline-none"
+                  type="text"
                   {...register("location", { required: true })}
                 />
+
                 {errors.location && (
-                  <p className="text-red-500 text-xs">Location is required</p>
+                  <p className="text-red-500 text-xs">location are required</p>
                 )}
               </div>
             </div>
