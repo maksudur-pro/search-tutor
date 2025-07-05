@@ -13,10 +13,16 @@ import {
   CloudUpload,
 } from "lucide-react";
 import Swal from "sweetalert2";
+import UploadBox from "../../Component/UploadBox/UploadBox";
+import UploadingPreview from "../../Component/UploadingPreview/UploadingPreview";
+import ImagePreview from "../../Component/ImagePreview/ImagePreview";
 
 const Profile = () => {
   const { userInfo, loading, setUserData } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
+  const [nidUploading, setNidUploading] = useState(false);
+  const [idCardUploading, setIdCardUploading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -32,6 +38,7 @@ const Profile = () => {
     passingYear: "",
     image: "",
     nid: "",
+    idCard: "",
   });
 
   useEffect(() => {
@@ -51,6 +58,7 @@ const Profile = () => {
         passingYear: userInfo.passingYear || "",
         image: userInfo.image || "",
         nid: userInfo.nid || "",
+        idCard: userInfo.idCard || "",
       });
     }
   }, [userInfo]);
@@ -75,6 +83,10 @@ const Profile = () => {
   // Upload image to Cloudinary, update formData with the URL
   const uploadImage = async (file, fieldName) => {
     if (!file) return;
+
+    // Uploading স্টেট সেট করা
+    if (fieldName === "nid") setNidUploading(true);
+    else if (fieldName === "idCard") setIdCardUploading(true);
 
     const data = new FormData();
     data.append("file", file);
@@ -107,6 +119,9 @@ const Profile = () => {
         title: "Upload failed",
         text: "Please try again.",
       });
+    } finally {
+      if (fieldName === "nid") setNidUploading(false);
+      else if (fieldName === "idCard") setIdCardUploading(false);
     }
   };
 
@@ -118,6 +133,11 @@ const Profile = () => {
   const handleNidImageChange = (e) => {
     const file = e.target.files[0];
     uploadImage(file, "nid");
+  };
+
+  const handleIdCardChange = (e) => {
+    const file = e.target.files[0];
+    uploadImage(file, "idCard");
   };
 
   // Save all changes to backend
@@ -178,7 +198,10 @@ const Profile = () => {
               <img
                 alt={formData?.name}
                 className="w-36 h-36 object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
-                src={formData.image || "https://i.pravatar.cc/300"}
+                src={
+                  formData.image ||
+                  "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                }
               />
 
               {isEditing && (
@@ -246,8 +269,8 @@ const Profile = () => {
               Address
             </p>
             <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {formData.city || "No data found"},{" "}
-              {formData.location || "No data found"}
+              {formData.location || "No data found"},{" "}
+              {formData.city || "No data found"}
             </p>
           </div>
         </div>
@@ -337,27 +360,16 @@ const Profile = () => {
                       City
                     </strong>
 
-                    {formData.location || (
-                      <span className="text-red-600">Not Given</span>
-                    )}
-                  </p>
-                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
-                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Location
-                    </strong>
-
                     {formData.city || (
                       <span className="text-red-600">Not Given</span>
                     )}
                   </p>
+
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Address
                     </strong>
-                    {formData.city || (
-                      <span className="text-red-600">Not Given</span>
-                    )}
-                    ,{" "}
+
                     {formData.location || (
                       <span className="text-red-600">Not Given</span>
                     )}
@@ -420,7 +432,7 @@ const Profile = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Department / Class
+                      Department
                     </strong>
 
                     {isEditing ? (
@@ -442,7 +454,7 @@ const Profile = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Previous Exam / Degree
+                      Session
                     </strong>
                     {isEditing ? (
                       <input
@@ -463,7 +475,7 @@ const Profile = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Year of Passing
+                      Year
                     </strong>
 
                     {isEditing ? (
@@ -496,49 +508,43 @@ const Profile = () => {
             </div>
 
             <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
-              {isEditing && (
-                <>
-                  {/* Hidden File Input */}
-                  <input
-                    id="nidImageUpload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleNidImageChange}
-                  />
-                  {/* Clickable Upload Box */}
-                  <label htmlFor="nidImageUpload">
-                    <div className="relative h-44 w-full min-w-[13.5rem] md:w-[13.75rem] cursor-pointer rounded-md bg-[#f2f5fc] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
-                      <div className="flex h-full flex-col items-center justify-center border-[3px] border-dotted border-indigo-500 text-center text-indigo-500">
-                        <CloudUpload className="mx-auto" size={60} />
-                        <p>nid</p>
-                      </div>
-                    </div>
-                  </label>
-                </>
+              {/* NID Upload */}
+              {isEditing && !formData.nid && !nidUploading && (
+                <UploadBox
+                  id="nidImageUpload"
+                  label="NID"
+                  onChange={handleNidImageChange}
+                />
               )}
-              {formData.nid && (
-                <div className="md:ms-8">
-                  <div className="relative h-44 overflow-hidden rounded-sm bg-[#ddd] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
-                    <img
-                      alt="NID"
-                      width="220"
-                      height="100"
-                      className="mx-auto max-h-[9.5rem] object-cover"
-                      src={formData.nid}
-                    />
-                    <p className="absolute bottom-3 left-3 w-[calc(100%-24px)] bg-[#9b9b9ba6] p-2 text-center text-xs font-bold text-white">
-                      NID
-                    </p>
-                  </div>
-                </div>
+              {nidUploading ? (
+                <UploadingPreview label="NID" />
+              ) : formData.nid ? (
+                <ImagePreview src={formData.nid} label="NID" />
+              ) : null}
+
+              {/* ID Card Upload */}
+              {isEditing && !formData.idCard && !idCardUploading && (
+                <UploadBox
+                  id="studentIdImageUpload"
+                  label="ID Card"
+                  onChange={handleIdCardChange}
+                />
               )}
-              {formData.nid === "" && (
-                <p className="ms-0 text-red-600 md:ms-8 my-4">
-                  You have not uploaded any credential yet
+              {idCardUploading ? (
+                <UploadingPreview label="ID Card" />
+              ) : formData.idCard ? (
+                <ImagePreview src={formData.idCard} label="ID Card" />
+              ) : null}
+            </div>
+
+            {!formData.nid &&
+              !formData.idCard &&
+              !nidUploading &&
+              !idCardUploading && (
+                <p className="text-red-600 text-sm mt-4 md:ms-8">
+                  You have not uploaded any credentials yet.
                 </p>
               )}
-            </div>
           </div>
         </div>
       </div>
