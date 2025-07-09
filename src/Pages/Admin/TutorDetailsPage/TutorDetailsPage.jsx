@@ -8,6 +8,7 @@ import {
   Mail,
   GraduationCap,
 } from "lucide-react";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const TutorDetailsPage = () => {
   const { uid } = useParams();
@@ -20,17 +21,10 @@ const TutorDetailsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(
-          `https://search-tutor-server.vercel.app/users/${uid}`
-        );
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || "Failed to fetch tutor data");
-        }
-        const data = await res.json();
+        const { data } = await axiosInstance.get(`/users/${uid}`);
         setUser(data);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.error || "Failed to fetch tutor data");
       } finally {
         setLoading(false);
       }

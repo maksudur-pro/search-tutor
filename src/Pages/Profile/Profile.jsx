@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import UploadBox from "../../Component/UploadBox/UploadBox";
 import UploadingPreview from "../../Component/UploadingPreview/UploadingPreview";
 import ImagePreview from "../../Component/ImagePreview/ImagePreview";
+import axiosInstance from "../../utils/axiosInstance";
 
 const Profile = () => {
   const { userInfo, loading, setUserData } = useContext(AuthContext);
@@ -143,22 +144,12 @@ const Profile = () => {
   // Save all changes to backend
   const handleSave = async () => {
     try {
-      const response = await fetch(
-        `https://search-tutor-server.vercel.app/users/${userInfo.uid}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
+      const response = await axiosInstance.patch(
+        `/users/${userInfo.uid}`,
+        formData
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
-
-      const updatedUser = await response.json();
+      const updatedUser = response.data;
 
       // Update global userInfo in context
       setUserData(updatedUser);
@@ -175,7 +166,7 @@ const Profile = () => {
       Swal.fire({
         icon: "error",
         title: "Update failed",
-        text: error.message,
+        text: error.message || "Failed to update profile",
       });
     }
   };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const AdminApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -13,9 +13,7 @@ const AdminApplications = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "https://search-tutor-server.vercel.app/applications"
-      );
+      const res = await axiosInstance.get("/applications");
       setApplications(res.data);
       setError(null);
     } catch {
@@ -32,10 +30,9 @@ const AdminApplications = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       setUpdatingId(id);
-      await axios.patch(
-        `https://search-tutor-server.vercel.app/applications/${id}/status`,
-        { status: newStatus }
-      );
+      await axiosInstance.patch(`/applications/${id}/status`, {
+        status: newStatus,
+      });
       setApplications((prev) =>
         prev.map((app) =>
           app._id === id ? { ...app, status: newStatus } : app

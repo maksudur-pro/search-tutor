@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const TuitionRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchTuitionRequests = () => {
-    fetch("https://search-tutor-server.vercel.app/tuition-requests")
-      .then((res) => res.json())
-      .then((data) => {
-        setRequests(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch requests:", err);
-        setLoading(false);
-      });
+  const fetchTuitionRequests = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get("/tuition-requests");
+      setRequests(data);
+    } catch (err) {
+      console.error("Failed to fetch requests:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -24,16 +24,10 @@ const TuitionRequests = () => {
 
   const handleMarkAsCalled = async (id) => {
     try {
-      const response = await fetch(
-        `https://search-tutor-server.vercel.app/tuition-requests/${id}/call-status`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isCalled: true }),
-        }
+      const { data } = await axiosInstance.patch(
+        `/tuition-requests/${id}/call-status`,
+        { isCalled: true }
       );
-
-      const data = await response.json();
 
       if (data.success) {
         Swal.fire({
@@ -51,7 +45,7 @@ const TuitionRequests = () => {
           text: "Failed to update called status.",
         });
       }
-    } catch (error) {
+    } catch {
       Swal.fire({
         icon: "error",
         title: "Network Error",

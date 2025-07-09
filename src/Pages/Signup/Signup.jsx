@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import cityOptions from "../../assets/cityOptions.json";
 import { useForm } from "react-hook-form";
 import Select from "react-dropdown-select";
+import axiosInstance from "../../utils/axiosInstance";
 
 const Signup = () => {
   const { createUser, loading, setLoading, setUserData } =
@@ -30,13 +31,11 @@ const Signup = () => {
     const gender = form.gender.value;
     const phoneNumber = form.phoneNumber.value;
     const email = form.email.value;
-
     const location = form.location.value;
     const password = form.password.value;
     const confirmPassword = form.confirmPassword.value;
     const accountType = form.accountType.value;
 
-    // Basic validations
     if (password !== confirmPassword) {
       Swal.fire({
         icon: "error",
@@ -49,11 +48,10 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      // Create Firebase User
+      // Firebase user create
       const result = await createUser(email, password);
       const uid = result.user.uid;
 
-      // Prepare userData
       const userData = {
         uid,
         name,
@@ -65,20 +63,9 @@ const Signup = () => {
         accountType,
       };
 
-      // Save to MongoDB
-      const dbRes = await fetch(
-        "https://search-tutor-server.vercel.app/users",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        }
-      );
-
-      if (!dbRes.ok) throw new Error("Failed to save user to database");
-
-      const dbData = await dbRes.json();
-      console.log("User saved to MongoDB:", dbData);
+      // Save user to MongoDB
+      const dbRes = await axiosInstance.post("/users", userData);
+      const dbData = dbRes.data;
 
       setUserData(dbData);
       Swal.fire({
@@ -92,6 +79,7 @@ const Signup = () => {
       navigate("/");
     } catch (error) {
       console.error(error);
+
       if (error.code === "auth/email-already-in-use") {
         Swal.fire({
           icon: "error",
@@ -101,7 +89,11 @@ const Signup = () => {
         return;
       }
 
-      Swal.fire({ icon: "error", title: "Error", text: error.message });
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.error || error.message,
+      });
     } finally {
       setLoading(false);
     }

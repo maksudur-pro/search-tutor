@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const Tutors = () => {
   const [selectedTutors, setSelectedTutors] = useState([]);
@@ -8,15 +9,17 @@ const Tutors = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://search-tutor-server.vercel.app/applications")
-      .then((res) => res.json())
-      .then((data) => {
+    setLoading(true);
+    axiosInstance
+      .get("/applications")
+      .then(({ data }) => {
         const selected = data.filter((app) => app.status === "selected");
         setSelectedTutors(selected);
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching selected tutors:", error);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
@@ -38,7 +41,6 @@ const Tutors = () => {
   }, [searchTerm, selectedTutors]);
 
   const markAsPaid = async (applicationId) => {
-    // Confirm with SweetAlert before updating
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Do you want to mark payment as paid?",
@@ -51,19 +53,12 @@ const Tutors = () => {
     if (!result.isConfirmed) return;
 
     try {
-      const res = await fetch(
-        `https://search-tutor-server.vercel.app/applications/${applicationId}/payment`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ paymentStatus: "paid" }),
-        }
+      const { data } = await axiosInstance.patch(
+        `/applications/${applicationId}/payment`,
+        { paymentStatus: "paid" }
       );
-      const data = await res.json();
+
       if (data.success) {
-        // Update local state immediately
         setSelectedTutors((prev) =>
           prev.map((app) =>
             app._id === applicationId ? { ...app, paymentStatus: "paid" } : app

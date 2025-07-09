@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../../providers/AuthProvider";
+import axiosInstance from "../../utils/axiosInstance";
 
 const AppliedJobs = () => {
   const { user } = useContext(AuthContext); // your auth context providing logged-in user
@@ -18,9 +18,7 @@ const AppliedJobs = () => {
     const fetchAppliedJobs = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `https://search-tutor-server.vercel.app/applications/user/${user.uid}`
-        );
+        const res = await axiosInstance.get(`/applications/user/${user.uid}`);
         setJobs(res.data || []);
       } catch (err) {
         setError(err);

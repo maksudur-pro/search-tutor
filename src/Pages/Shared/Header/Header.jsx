@@ -22,7 +22,9 @@ const Header = () => {
 
   const handleLogout = () => {
     logOut()
-      .then(() => {})
+      .then(() => {
+        localStorage.removeItem("accessToken");
+      })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);

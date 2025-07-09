@@ -2,24 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import { Trash2 } from "lucide-react";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const ManageUsers = () => {
   const { userInfo } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUsers = () => {
-    setLoading(true);
-    fetch("https://search-tutor-server.vercel.app/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await axiosInstance.get("/users");
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -27,12 +26,8 @@ const ManageUsers = () => {
   }, []);
 
   const updateRole = (uid, newRole) => {
-    fetch(`https://search-tutor-server.vercel.app/users/${uid}/accountType`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accountType: newRole }),
-    })
-      .then((res) => res.json())
+    axiosInstance
+      .patch(`/users/${uid}/accountType`, { accountType: newRole })
       .then(() => {
         Swal.fire({
           icon: "success",

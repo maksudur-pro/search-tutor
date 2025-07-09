@@ -10,6 +10,7 @@ import locationOptionsByCity from "../../../assets/locationOptionsByCity.json";
 
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const PostJob = () => {
   const { loading } = useContext(AuthContext);
@@ -39,16 +40,8 @@ const PostJob = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch(
-        "https://search-tutor-server.vercel.app/job-requests",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const result = await res.json();
+      const res = await axiosInstance.post("/job-requests", data);
+      const result = res.data;
       console.log(result);
       if (result.success) {
         Swal.fire({

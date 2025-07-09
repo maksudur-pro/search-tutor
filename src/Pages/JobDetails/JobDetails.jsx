@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../providers/AuthProvider";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -16,8 +16,8 @@ const JobDetails = () => {
   // Fetch if user has applied
   useEffect(() => {
     if (user && job) {
-      axios
-        .get(`https://search-tutor-server.vercel.app/applications/check`, {
+      axiosInstance
+        .get("/applications/check", {
           params: { jobId: job._id, userId: user.uid },
         })
         .then((res) => {
@@ -44,14 +44,11 @@ const JobDetails = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await axios.post(
-          "https://search-tutor-server.vercel.app/applications",
-          {
-            jobId: job._id,
-            userId: user.uid,
-            userEmail: user.email,
-          }
-        );
+        const res = await axiosInstance.post("/applications", {
+          jobId: job._id,
+          userId: user.uid,
+          userEmail: user.email,
+        });
 
         if (res.data.success) {
           await Swal.fire({
@@ -73,11 +70,12 @@ const JobDetails = () => {
   };
 
   useEffect(() => {
-    fetch(`https://search-tutor-server.vercel.app/jobs/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setJob(data.data);
+    setLoading(true);
+    axiosInstance
+      .get(`/jobs/${id}`)
+      .then((res) => {
+        if (res.data.success) {
+          setJob(res.data.data);
         } else {
           setError("Job not found");
         }

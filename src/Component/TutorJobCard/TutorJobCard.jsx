@@ -2,9 +2,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { Share, Share2 } from "lucide-react";
+import axiosInstance from "../../utils/axiosInstance";
 
 const TutorJobCard = ({ job }) => {
   const { user } = useContext(AuthContext);
@@ -13,16 +13,26 @@ const TutorJobCard = ({ job }) => {
 
   // Fetch if user has applied
   useEffect(() => {
-    if (user && job._id) {
-      axios
-        .get(`https://search-tutor-server.vercel.app/applications/check`, {
-          params: { jobId: job._id, userId: user.uid },
-        })
-        .then((res) => {
-          setHasApplied(res.data.hasApplied);
-        })
-        .catch((err) => console.error(err));
+    // If either is missing, ensure we don’t show “true” from a prior job
+    if (!user || !job._id) {
+      setHasApplied(false);
+      return;
     }
+
+    axiosInstance
+      .get("/applications/check", {
+        params: { jobId: job._id, userId: user.uid },
+      })
+      .then((res) => {
+        setHasApplied(res.data.hasApplied);
+      })
+      .catch((err) => {
+        console.error("Error checking application:", err);
+        setHasApplied(false);
+      })
+      .finally(() => {
+        // setCheckingApplication(false);
+      });
   }, [user, job._id]);
 
   const handleApply = async () => {
@@ -42,14 +52,11 @@ const TutorJobCard = ({ job }) => {
 
     if (result.isConfirmed) {
       try {
-        const res = await axios.post(
-          "https://search-tutor-server.vercel.app/applications",
-          {
-            jobId: job._id,
-            userId: user.uid,
-            userEmail: user.email,
-          }
-        );
+        const res = await axiosInstance.post("/applications", {
+          jobId: job._id,
+          userId: user.uid,
+          userEmail: user.email,
+        });
 
         if (res.data.success) {
           await Swal.fire({

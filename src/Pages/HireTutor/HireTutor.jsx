@@ -10,6 +10,7 @@ import cityOptions from "../../assets/cityOptions.json";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import axiosInstance from "../../utils/axiosInstance";
 
 const HireTutor = () => {
   const { loading } = useContext(AuthContext);
@@ -31,14 +32,10 @@ const HireTutor = () => {
   const onSubmit = (data) => {
     console.log("Form submitted data:", data);
 
-    fetch("https://search-tutor-server.vercel.app/tuition-requests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
+    axiosInstance
+      .post("/tuition-requests", data)
+      .then((res) => {
+        if (res.data.success) {
           Swal.fire({
             icon: "success",
             title: "Success!",

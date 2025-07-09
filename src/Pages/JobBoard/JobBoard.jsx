@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
+import axiosInstance from "../../utils/axiosInstance";
 
 const JobBoard = () => {
   const [jobs, setJobs] = useState([]);
@@ -7,11 +8,11 @@ const JobBoard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://search-tutor-server.vercel.app/jobs")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setJobs(data.data);
+    axiosInstance
+      .get("/jobs")
+      .then((res) => {
+        if (res.data.success) {
+          setJobs(res.data.data);
         } else {
           setError("Failed to load jobs");
         }

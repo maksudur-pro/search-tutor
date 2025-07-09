@@ -7,6 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { app } from "../firebase/firebase.config";
+import axiosInstance from "../utils/axiosInstance";
 
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
@@ -32,40 +33,45 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
       if (currentUser) {
-        // Fetch user data from MongoDB using uid
-        fetch(`https://search-tutor-server.vercel.app/users/${currentUser.uid}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setUserData(data); // set full user info from DB
-            setLoading(false);
-          })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-            setLoading(false);
+        try {
+          let token = localStorage.getItem("accessToken");
+
+          // যদি token না থাকে তাহলে JWT থেকে নতুন টোকেন চাও
+          if (!token) {
+            const jwtRes = await axiosInstance.post("/jwt", {
+              uid: currentUser.uid,
+              email: currentUser.email,
+            });
+
+            token = jwtRes.data.token;
+            localStorage.setItem("accessToken", token);
+          }
+
+          // এখন ইউজার ডেটা নিয়ে আসো
+          const userRes = await axiosInstance.get(`/users/${currentUser.uid}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
+
+          setUserData(userRes.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          setUserData(null);
+        }
       } else {
         setUserData(null);
-        setLoading(false);
       }
+
+      setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     setUser(currentUser);
-  //     console.log("currentUser", currentUser);
-  //     setLoading(false);
-  //   });
-
-  //   return () => {
-  //     return unsubscribe;
-  //   };
-  // }, []);
 
   const authInfo = {
     user,

@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import axiosInstance from "../../utils/axiosInstance";
 
 const SignIn = () => {
-  const { signIn, userInfo, loading, setLoading } = useContext(AuthContext);
+  const { signIn, loading, setLoading } = useContext(AuthContext);
 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -17,22 +18,38 @@ const SignIn = () => {
     const password = form.password.value;
 
     try {
-      await signIn(email, password);
-      if (!userInfo) {
-        setLoading(false);
-        navigate("/profile");
-        Swal.fire({
-          icon: "success",
-          title: "Login successful!",
-          timer: 1200,
-          showConfirmButton: false,
-        });
+      // Step 1: Firebase login
+      const result = await signIn(email, password);
+      const user = result.user;
+
+      if (user) {
+        const currentUser = {
+          uid: user.uid,
+          email: user.email,
+        };
+
+        const { data } = await axiosInstance.post("/jwt", currentUser);
+
+        if (data.token) {
+          localStorage.setItem("accessToken", data.token);
+
+          Swal.fire({
+            icon: "success",
+            title: "Login successful!",
+            timer: 1200,
+            showConfirmButton: false,
+          });
+
+          navigate("/profile");
+        } else {
+          throw new Error("JWT token not received");
+        }
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: error.message,
+        text: error.response?.data?.error || error.message,
       });
     } finally {
       setLoading(false);
