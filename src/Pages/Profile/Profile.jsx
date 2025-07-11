@@ -517,14 +517,14 @@ const Profile = () => {
               {isEditing && !formData.idCard && !idCardUploading && (
                 <UploadBox
                   id="studentIdImageUpload"
-                  label="ID Card"
+                  label="Student ID CARD"
                   onChange={handleIdCardChange}
                 />
               )}
               {idCardUploading ? (
-                <UploadingPreview label="ID Card" />
+                <UploadingPreview label="Student ID CARD" />
               ) : formData.idCard ? (
-                <ImagePreview src={formData.idCard} label="ID Card" />
+                <ImagePreview src={formData.idCard} label="Student ID CARD" />
               ) : null}
             </div>
 
