@@ -6,7 +6,6 @@ import daysPerWeekOptions from "../../../assets/daysPerWeekOptions.json";
 import tuitionTypeOptions from "../../../assets/tuitionTypeOptions.json";
 import categoryOptions from "../../../assets/categoryOptions.json";
 import cityOptions from "../../../assets/cityOptions.json";
-import locationOptionsByCity from "../../../assets/locationOptionsByCity.json";
 
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
@@ -23,26 +22,22 @@ const PostJob = () => {
     formState: { errors },
   } = useForm();
 
+  const [tuitionType, setTuitionType] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [classValue, setClassValue] = useState([]);
+  const [daysPerWeek, setDaysPerWeek] = useState([]);
   const [city, setCity] = useState([]);
-  const [location, setLocation] = useState([]);
 
-  const handleCityChange = (val) => {
-    setCity(val);
-    setLocation([]);
-    setValue("city", val[0]?.value || "");
-    setValue("location", ""); // clear location value when city changes
-  };
-
-  const handleLocationChange = (val) => {
-    setLocation(val);
-    setValue("location", val[0]?.value || "");
-  };
+  // const handleCityChange = (val) => {
+  //   setCity(val);
+  //   setValue("city", val[0]?.value || "");
+  // };
 
   const onSubmit = async (data) => {
     try {
       const res = await axiosInstance.post("/job-requests", data);
       const result = res.data;
-      console.log(result);
+      // console.log(result);
       if (result.success) {
         Swal.fire({
           icon: "success",
@@ -52,6 +47,11 @@ const PostJob = () => {
           showConfirmButton: false,
         });
         reset();
+        setTuitionType([]);
+        setCategory([]);
+        setClassValue([]);
+        setDaysPerWeek([]);
+        setCity([]);
       } else {
         Swal.fire({
           icon: "error",
@@ -88,9 +88,14 @@ const PostJob = () => {
                 </label>
                 <Select
                   options={tuitionTypeOptions}
+                  values={tuitionType}
+                  onChange={(val) => {
+                    setTuitionType(val);
+                    setValue("tuitionType", val[0]?.value);
+                  }}
                   placeholder="Select Tuition Type"
-                  onChange={(val) => setValue("tuitionType", val[0]?.value)}
                 />
+
                 <input
                   type="hidden"
                   {...register("tuitionType", { required: true })}
@@ -109,9 +114,14 @@ const PostJob = () => {
                 </label>
                 <Select
                   options={categoryOptions}
+                  values={category}
+                  onChange={(val) => {
+                    setCategory(val);
+                    setValue("category", val[0]?.value);
+                  }}
                   placeholder="Select Category"
-                  onChange={(val) => setValue("category", val[0]?.value)}
                 />
+
                 <input
                   type="hidden"
                   {...register("category", { required: true })}
@@ -173,16 +183,19 @@ const PostJob = () => {
             {/* City and Location */}
             <div className="mt-8 flex flex-col gap-8 md:flex-row">
               <div className="md:w-1/2">
-                <label className="text-sm">
+                <label className="text-lg">
                   City <span className="text-red-500">*</span>
                 </label>
                 <Select
                   options={cityOptions}
                   values={city}
-                  onChange={handleCityChange}
+                  onChange={(val) => {
+                    setCity(val);
+                    setValue("city", val[0]?.value);
+                  }}
                   placeholder="Select City"
-                  dropdownPosition="auto"
                 />
+
                 <input
                   type="hidden"
                   {...register("city", { required: true })}
@@ -191,33 +204,19 @@ const PostJob = () => {
                   <p className="text-red-500 text-xs">City is required</p>
                 )}
               </div>
-
               <div className="md:w-1/2">
                 <label className="text-sm">
-                  Location <span className="text-red-500">*</span>
+                  Address Details <span className="text-red-500">*</span>
                 </label>
-                <Select
-                  options={
-                    city.length > 0
-                      ? locationOptionsByCity[city[0].value] || []
-                      : []
-                  }
-                  values={location}
-                  onChange={handleLocationChange}
-                  placeholder={
-                    city.length > 0
-                      ? "Select Location"
-                      : "Please select City first"
-                  }
-                  dropdownPosition="auto"
-                  disabled={city.length === 0}
-                />
                 <input
-                  type="hidden"
+                  placeholder="type address"
+                  className="w-full border px-2 border-black/30 py-2  focus:outline-none"
+                  type="text"
                   {...register("location", { required: true })}
                 />
+
                 {errors.location && (
-                  <p className="text-red-500 text-xs">Location is required</p>
+                  <p className="text-red-500 text-xs">Address are required</p>
                 )}
               </div>
             </div>
@@ -230,9 +229,14 @@ const PostJob = () => {
                 </label>
                 <Select
                   options={classOptions}
+                  values={classValue}
+                  onChange={(val) => {
+                    setClassValue(val);
+                    setValue("class", val[0]?.value);
+                  }}
                   placeholder="Select Class"
-                  onChange={(val) => setValue("class", val[0]?.value)}
                 />
+
                 <input
                   type="hidden"
                   {...register("class", { required: true })}
@@ -267,9 +271,14 @@ const PostJob = () => {
                 </label>
                 <Select
                   options={daysPerWeekOptions}
+                  values={daysPerWeek}
+                  onChange={(val) => {
+                    setDaysPerWeek(val);
+                    setValue("daysPerWeek", val[0]?.value);
+                  }}
                   placeholder="Select Days/Week"
-                  onChange={(val) => setValue("daysPerWeek", val[0]?.value)}
                 />
+
                 <input
                   type="hidden"
                   {...register("daysPerWeek", { required: true })}
