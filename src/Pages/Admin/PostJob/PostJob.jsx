@@ -183,10 +183,12 @@ const PostJob = () => {
             {/* City and Location */}
             <div className="mt-8 flex flex-col gap-8 md:flex-row">
               <div className="md:w-1/2">
-                <label className="text-lg">
+                <label className="text-sm">
                   City <span className="text-red-500">*</span>
                 </label>
                 <Select
+                  searchable
+                  noDataLabel="No city found"
                   options={cityOptions}
                   values={city}
                   onChange={(val) => {
