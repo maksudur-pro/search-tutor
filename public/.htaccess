@@ -1,0 +1,4 @@
+RewriteEngine On RewriteCond %{HTTPS} !=on RewriteRule ^
+https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301] RewriteCond %{REQUEST_URI}
+!\.(css|js|png|jpg|gif)$ RewriteCond %{REQUEST_URI} !^/index.html$ RewriteRule
+^(.*)$ /index.html [L,QSA]

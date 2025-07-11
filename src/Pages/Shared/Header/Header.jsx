@@ -235,7 +235,7 @@ const Header = () => {
                   <div className="drawer-content">
                     <label htmlFor="mobile-drawer" className="btn btn-ghost">
                       <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns="https://www.w3.org/2000/svg"
                         className="h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
