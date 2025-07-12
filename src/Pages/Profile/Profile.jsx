@@ -498,7 +498,7 @@ const Profile = () => {
               </h2>
             </div>
 
-            <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
+            <div className="mt-4 flex flex-col md:flex-row lg:flex-row gap-4  items-center ">
               {/* NID Upload */}
               {isEditing && !formData.nid && !nidUploading && (
                 <UploadBox

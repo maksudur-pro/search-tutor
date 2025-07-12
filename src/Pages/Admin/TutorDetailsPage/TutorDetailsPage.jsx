@@ -9,6 +9,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import axiosInstance from "../../../utils/axiosInstance";
+import ImagePreview from "../../../Component/ImagePreview/ImagePreview";
 
 const TutorDetailsPage = () => {
   const { uid } = useParams();
@@ -65,7 +66,10 @@ const TutorDetailsPage = () => {
                   user?.name || <span className="text-red-600">Not Given</span>
                 }
                 className="w-36 h-36 object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
-                src={user?.image || "https://i.pravatar.cc/300"}
+                src={
+                  user?.image ||
+                  "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                }
               />
             </div>
           </div>
@@ -104,10 +108,10 @@ const TutorDetailsPage = () => {
               Address
             </p>
             <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {user?.city || <span className="text-red-600">Not Given</span>},{" "}
               {user?.location || (
                 <span className="text-red-600">Not Given</span>
               )}
+              , {user?.city || <span className="text-red-600">Not Given</span>}
             </p>
           </div>
         </div>
@@ -180,16 +184,6 @@ const TutorDetailsPage = () => {
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       City
                     </strong>
-
-                    {user?.location || (
-                      <span className="text-red-600">Not Given</span>
-                    )}
-                  </p>
-                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
-                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Location
-                    </strong>
-
                     {user?.city || (
                       <span className="text-red-600">Not Given</span>
                     )}
@@ -198,10 +192,6 @@ const TutorDetailsPage = () => {
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Address
                     </strong>
-                    {user?.city || (
-                      <span className="text-red-600">Not Given</span>
-                    )}
-                    ,{" "}
                     {user?.location || (
                       <span className="text-red-600">Not Given</span>
                     )}
@@ -238,7 +228,7 @@ const TutorDetailsPage = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Department / Class
+                      Department
                     </strong>
 
                     {user?.department || (
@@ -247,7 +237,7 @@ const TutorDetailsPage = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Previous Exam / Degree
+                      Session
                     </strong>
 
                     {user?.degree || (
@@ -256,7 +246,7 @@ const TutorDetailsPage = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Year of Passing
+                      Year
                     </strong>
 
                     {user?.passingYear || (
@@ -275,28 +265,17 @@ const TutorDetailsPage = () => {
               </h2>
             </div>
 
-            <div className="mt-4 flex items-center justify-center md:justify-start md:gap-6">
-              {user?.nid ? (
-                <div className="md:ms-8">
-                  <div className="relative h-44 overflow-hidden rounded-sm bg-[#ddd] p-3 shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
-                    <img
-                      alt="NID"
-                      width="220"
-                      height="100"
-                      className="mx-auto max-h-[9.5rem] object-cover"
-                      src={user?.nid}
-                    />
-                    <p className="absolute bottom-3 left-3 w-[calc(100%-24px)] bg-[#9b9b9ba6] p-2 text-center text-xs font-bold text-white">
-                      NID
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className="ms-0 text-red-600 md:ms-8">
-                  User not uploaded any credential yet
-                </p>
+            <div className="mt-4 flex flex-col md:flex-row lg:flex-row gap-4 items-center ">
+              {user?.nid && <ImagePreview src={user?.nid} label="NID" />}
+              {user?.idCard && (
+                <ImagePreview src={user?.idCard} label="Student ID CARD" />
               )}
             </div>
+            {!(user.nid || user.idCard) && (
+              <p className="text-red-600 text-sm mt-4 md:ms-8">
+                You have not uploaded any credentials yet.
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -104,7 +104,10 @@ const ManageUsers = () => {
           <div key={user.uid} className="card bg-base-100 shadow-md">
             <figure>
               <img
-                src={user.image}
+                src={
+                  user?.image ||
+                  "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                }
                 alt="user-image"
                 className="h-80 w-full object-cover object-top"
               />
