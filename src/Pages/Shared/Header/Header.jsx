@@ -177,7 +177,7 @@ const Header = () => {
                 size={18}
                 className="block md:hidden lg:hidden mr-2"
               />
-              Tutors
+              Tutors Payment
             </NavLink>
           </li>
         </>
