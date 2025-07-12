@@ -3,8 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
-import { Share, Share2 } from "lucide-react";
+import { Clock, Share, Share2 } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
+import JobPostTime from "../JobPostTime/JobPostTime";
 
 const TutorJobCard = ({ job }) => {
   const { user } = useContext(AuthContext);
@@ -98,7 +99,13 @@ const TutorJobCard = ({ job }) => {
       <div className="relative  rounded-xl border border-[rgba(6,53,85,0.16)] bg-white p-4 lg:p-6 shadow transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg  max-w-xl">
         <div className="text-[#8c8484]">
           <h3 className="mb-3 text-xl font-semibold text-[#2b2b2c] ">
-            {job.title}
+            {job.title}{" "}
+            <span className="badge">
+              <p className="text-[12px] flex items-center justify-end gap-1 text-gray-500">
+                <Clock size={14} className="text-gray-400" />
+                <JobPostTime date={job.dateObj} />
+              </p>
+            </span>
           </h3>
 
           <div className="flex items-center gap-4 mb-3">
