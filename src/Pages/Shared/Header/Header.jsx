@@ -201,7 +201,7 @@ const Header = () => {
                 <Link to={"/"}>
                   <img
                     className="w-36 md:w-[11.1rem]"
-                    src="/search-tutor.png"
+                    src="https://searchtutorbd.com/assets/logo.png"
                     alt=""
                   />
                 </Link>
@@ -276,7 +276,7 @@ const Header = () => {
                           <Link to={"/"}>
                             <img
                               className="w-36 md:w-[11.1rem] pb-2 mb-4 border-b-[1px] border-black"
-                              src="/search-tutor.png"
+                              src="https://searchtutorbd.com/assets/logo.png"
                               alt=""
                             />
                           </Link>

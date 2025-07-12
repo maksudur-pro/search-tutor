@@ -8,7 +8,7 @@ const Footer = () => {
           <aside>
             <img
               className="w-36 md:w-[11.1rem] invert filter brightness-0"
-              src="/search-tutor.png"
+              src="https://searchtutorbd.com/assets/logo.png"
               alt=""
             />
             <p className="w-[222px] text-justify text-white">

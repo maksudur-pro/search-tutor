@@ -75,7 +75,7 @@ const JobBoard = () => {
               </svg>
               Filter
             </button> */}
-            <div className="block md:hidden">
+            {/* <div className="block md:hidden">
               <button
                 className="justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 py-2 flex items-center px-4 text-sm md:text-base"
                 type="button"
@@ -96,7 +96,7 @@ const JobBoard = () => {
                 </svg>
                 Filter
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
