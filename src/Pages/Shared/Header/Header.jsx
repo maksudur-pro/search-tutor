@@ -188,8 +188,8 @@ const Header = () => {
   return (
     <>
       {loading ? (
-        <div className="flex justify-center items-center h-screen w-screen bg-white">
-          <progress className="progress w-56"></progress>
+        <div className="flex items-center justify-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : (
         <div

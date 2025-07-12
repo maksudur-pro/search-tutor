@@ -12,14 +12,14 @@ const Home = () => {
   return (
     <>
       {loading ? (
-        <div className="flex justify-center items-center h-screen w-screen bg-white">
-          <progress className="progress w-56"></progress>
+        <div className="flex items-center justify-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : (
         <>
           <div className="mx-auto px-4 lg:max-w-[60rem] xl:max-w-[71.25rem]">
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-2 ">
-              <div className="my-4 text-black md:mt-8 lg:mt-0 lg:w-1/2">
+            <div className="flex flex-col md:flex-row lg:flex-row items-center justify-between gap-2 my-4">
+              <div className="my-4 text-black">
                 <div className="mb-6">
                   <h1 className="text-3xl font-bold lg:text-4xl">
                     Hire the Right Tutor Today
@@ -46,7 +46,7 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="hero-images w-full p-2 lg:p-9 md:w-[33rem] lg:w-1/2">
+              <div className="hero-images  p-2 lg:p-9 ">
                 <div className="flex items-end gap-3">
                   <img
                     alt="Home Tutors & Tuitions"

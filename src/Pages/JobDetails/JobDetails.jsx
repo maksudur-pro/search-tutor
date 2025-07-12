@@ -84,7 +84,12 @@ const JobDetails = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p className="p-4 text-center">Loading job...</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
   if (error) return <p className="p-4 text-red-500 text-center">{error}</p>;
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-8 p-4">

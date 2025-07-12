@@ -2,9 +2,9 @@ import HowToWorkCard from "../HowToWorkCard/HowToWorkCard";
 
 const HowToWork = () => {
   return (
-    <div className="bg-[#F2F5FC]  py-10">
+    <div className="bg-[#F2F5FC] py-10">
       <div className="mx-auto px-4 lg:max-w-[60rem] xl:max-w-[71.25rem]">
-        <div className="container">
+        <div className="">
           <div className="mb-8 mt-4 px-4 text-center">
             <h1 className="text-3xl font-bold text-black md:text-4xl lg:text-3xl">
               How does it work for tutors?

@@ -34,7 +34,12 @@ const AppliedJobs = () => {
     return <p>Please log in to see your applied jobs.</p>;
   }
 
-  if (loading) return <p>Loading applied jobs...</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
   if (error)
     return (
       <p className="text-red-500">

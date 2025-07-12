@@ -22,7 +22,11 @@ const JobBoard = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center p-4">Loading jobs...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
   }
 
   if (error) {
