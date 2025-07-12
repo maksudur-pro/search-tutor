@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -18,6 +18,11 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [city, setCity] = useState([]);
   const navigate = useNavigate();
+  const [agreed, setAgreed] = useState(false);
+
+  const handleCheckboxChange = (e) => {
+    setAgreed(e.target.checked);
+  };
 
   const handleCityChange = (val) => {
     setCity(val[0]?.value || "");
@@ -324,40 +329,39 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* <div className="mt-8">
-          <label className="flex items-center">
-            <input
-              className="mr-2 focus:outline-none"
-              type="checkbox"
-              name="terms"
-              checked={formData.terms}
-              
-            />
-            <span className="text-[#4d4d4d]">
-              I agree to the{" "}
-              <a className="text-primary underline" href="/terms-condition">
-                Terms of Use and Privacy Policy
-              </a>
-            </span>
-          </label>
-        </div> */}
+            <div className="mt-8">
+              <label className="flex items-center">
+                <input
+                  onChange={handleCheckboxChange}
+                  className="mr-2 focus:outline-none cursor-pointer"
+                  type="checkbox"
+                  name="terms"
+                />
+                <span className="text-[#4d4d4d]">
+                  I agree to the{" "}
+                  <a className="text-primary underline" href="/terms-condition">
+                    Terms of Use and Privacy Policy
+                  </a>
+                </span>
+              </label>
+            </div>
 
             <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
               <button
                 type="submit"
-                className="group mt-8 flex w-fit items-center justify-between gap-5 whitespace-nowrap rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:border-indigo-500 hover:bg-white hover:text-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                disabled={!agreed}
+                className={`group mt-8 flex w-fit items-center justify-between gap-5 whitespace-nowrap rounded-md border ${
+                  agreed
+                    ? "border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500"
+                    : "bg-gray-300 text-gray-500 "
+                } px-4 py-2 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}>
                 Sign Up
-                <svg
-                  className="transition-all duration-500 ease-out group-hover:translate-x-1"
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 448 512"
-                  height="1em"
-                  width="1em"
-                  xmlns="https://www.w3.org/2000/svg">
-                  <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
-                </svg>
+                <ArrowRight
+                  className={`transition-all duration-500 ease-out ${
+                    agreed ? "group-hover:translate-x-1" : ""
+                  }`}
+                  size={16}
+                />
               </button>
               <p className="mt-2 text-xs text-[#2b2b2c] md:text-sm">
                 Already have an account?{" "}

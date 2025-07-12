@@ -17,6 +17,7 @@ import AdminApplications from "../Pages/Admin/AdminApplications/AdminApplication
 import TutorDetailsPage from "../Pages/Admin/TutorDetailsPage/TutorDetailsPage";
 import Tutors from "../Pages/Admin/Tutors/Tutors";
 import JobDetails from "../Pages/JobDetails/JobDetails";
+import Terms from "../Pages/terms/Terms";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "/hire-tutor",
         element: <HireTutor />,
+      },
+      {
+        path: "/terms-condition",
+        element: <Terms />,
       },
       {
         path: "/job-list",
