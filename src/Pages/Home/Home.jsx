@@ -55,7 +55,7 @@ const Home = () => {
                     height="208"
                     decoding="async"
                     className="img-shadow floating max-w-[9.5rem]  sm:max-w-full"
-                    src="https://searchtutorbd.com/assets/img1.jpg"
+                    src="https://searchtutorbd.com/imges/img1.jpg"
                   />
                   <img
                     alt="Home Tutors & Tuitions"
@@ -64,7 +64,7 @@ const Home = () => {
                     height="160"
                     decoding="async"
                     className=" img-shadow max-w-[8.6rem] floating2 sm:max-w-full"
-                    src="https://searchtutorbd.com/assets/img2.jpg"
+                    src="https://searchtutorbd.com/imges/img2.jpg"
                   />
                 </div>
                 <div className="mt-3 flex items-start gap-3">
@@ -75,7 +75,7 @@ const Home = () => {
                     height="160"
                     decoding="async"
                     className=" img-shadow max-w-[8.6rem] floating2 sm:max-w-full"
-                    src="https://searchtutorbd.com/assets/img3.jpg"
+                    src="https://searchtutorbd.com/imges/img3.jpg"
                   />
                   <img
                     alt="Home Tutors & Tuitions"
@@ -84,7 +84,7 @@ const Home = () => {
                     height="208"
                     decoding="async"
                     className=" img-shadow max-w-[9.5rem] floating sm:max-w-full"
-                    src="https://searchtutorbd.com/assets/img1.jpg"
+                    src="https://searchtutorbd.com/imges/img1.jpg"
                   />
                 </div>
               </div>
