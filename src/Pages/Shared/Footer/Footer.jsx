@@ -121,9 +121,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a
-                  href="https://wa.me/8801940261863?text=Hi%2C%20I%20am%20interested%20in%20tutoring%20services%20on%20Search%20Tutor."
-                  target="_blank">
+                <a href="https://wa.me/8801940261863" target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
