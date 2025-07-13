@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 import axiosInstance from "../../utils/axiosInstance";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const JobBoard = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     axiosInstance
@@ -20,6 +23,11 @@ const JobBoard = () => {
       .catch(() => setError("Error fetching jobs"))
       .finally(() => setLoading(false));
   }, []);
+
+  const totalPages = Math.ceil(jobs.length / itemsPerPage);
+  const indexOfLastJob = currentPage * itemsPerPage;
+  const indexOfFirstJob = indexOfLastJob - itemsPerPage;
+  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
 
   if (loading) {
     return (
@@ -61,49 +69,55 @@ const JobBoard = () => {
                 <span className="font-semibold">{jobs.length}</span> jobs found
               </p>
             </div>
-            {/* <button className="justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 py-2 hidden items-center px-4 text-sm md:flex md:text-base">
-              <svg
-                stroke="currentColor"
-                fill="currentColor"
-                strokeWidth="0"
-                viewBox="0 0 512 512"
-                className="me-1"
-                height="1em"
-                width="1em"
-                xmlns="https://www.w3.org/2000/svg">
-                <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
-              </svg>
-              Filter
-            </button> */}
-            {/* <div className="block md:hidden">
-              <button
-                className="justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-transparent bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500 h-10 py-2 flex items-center px-4 text-sm md:text-base"
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="radix-:r7:"
-                data-state="closed">
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 512 512"
-                  className="me-1"
-                  height="1em"
-                  width="1em"
-                  xmlns="https://www.w3.org/2000/svg">
-                  <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
-                </svg>
-                Filter
-              </button>
-            </div> */}
           </div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
-          {jobs.map((job, index) => (
+          {currentJobs.map((job, index) => (
             <TutorJobCard key={index} job={job} />
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8 flex-wrap pb-8">
+            {currentPage > 1 && (
+              <button
+                onClick={() => {
+                  setCurrentPage(currentPage - 1);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
+                <ChevronLeft size={20} />
+              </button>
+            )}
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={`page-${page}`}
+                onClick={() => {
+                  setCurrentPage(page);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className={`px-3 py-1 rounded ${
+                  currentPage === page
+                    ? "bg-indigo-500 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white"
+                } transition`}>
+                {page}
+              </button>
+            ))}
+
+            {currentPage < totalPages && (
+              <button
+                onClick={() => {
+                  setCurrentPage(currentPage + 1);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
+                <ChevronRight size={20} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
