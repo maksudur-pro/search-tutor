@@ -1,12 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
-import { Trash2 } from "lucide-react";
 import axiosInstance from "../../../utils/axiosInstance";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 
 const ManageUsers = () => {
   const { userInfo } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 12;
+
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
@@ -48,39 +53,6 @@ const ManageUsers = () => {
       );
   };
 
-  // const handleDeleteUser = (uid) => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "This action cannot be undone.",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Yes, delete user!",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       fetch(`https://search-tutor-server.vercel.app/users/${uid}`, {
-  //         method: "DELETE",
-  //       })
-  //         .then((res) => {
-  //           if (!res.ok) throw new Error("Failed to delete user");
-  //           return res.json();
-  //         })
-  //         .then(() => {
-  //           Swal.fire("Deleted!", "User has been deleted.", "success");
-  //           fetchUsers(); // Refresh the user list
-  //         })
-  //         .catch(() => {
-  //           Swal.fire(
-  //             "Error!",
-  //             "Failed to delete user. Please try again.",
-  //             "error"
-  //           );
-  //         });
-  //     }
-  //   });
-  // };
-
   if (loading || !userInfo) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -97,16 +69,75 @@ const ManageUsers = () => {
     );
   }
 
+  // Filter + search users
+  const filteredUsers = users.filter(
+    (user) =>
+      (filterRole === "all" || user.accountType === filterRole) &&
+      (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  );
+
+  const userCounts = {
+    all: users.length,
+    admin: users.filter((u) => u.accountType === "admin").length,
+    tutor: users.filter((u) => u.accountType === "tutor").length,
+    guardian: users.filter((u) => u.accountType === "guardian").length,
+  };
+
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10">
+      {/* Filter Buttons & Counts */}
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        {["all", "admin", "tutor", "guardian"].map((role) => (
+          <button
+            key={role}
+            onClick={() => {
+              setFilterRole(role);
+              setCurrentPage(1);
+            }}
+            className={`px-4 py-2 rounded-md font-medium border ${
+              filterRole === role
+                ? "bg-indigo-500 text-white"
+                : "bg-white text-indigo-500 border-indigo-500"
+            } hover:bg-indigo-600 hover:text-white transition-colors duration-200`}>
+            {role === "all"
+              ? `All (${userCounts.all})`
+              : `${role.charAt(0).toUpperCase() + role.slice(1)}s (${
+                  userCounts[role]
+                })`}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex justify-center mb-6">
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="input input-bordered w-full max-w-xs"
+        />
+      </div>
+
+      {/* User Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4 gap-6">
-        {users.map((user) => (
+        {paginatedUsers.map((user) => (
           <div key={user.uid} className="card bg-base-100 shadow-md">
             <figure>
               <img
                 src={
                   user?.image ||
-                  "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                  "https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
                 }
                 alt="user-image"
                 className="h-80 w-full object-cover object-top"
@@ -151,14 +182,6 @@ const ManageUsers = () => {
                       }`}>
                       Make Guardian
                     </button>
-
-                    {/* Delete Button
-                    <button
-                      onClick={() => handleDeleteUser(user.uid)}
-                      className="badge badge-outline border border-red-500 text-red-500 cursor-pointer px-3 py-1 rounded-md font-medium flex items-center gap-1 hover:bg-red-100 transition-colors duration-200">
-                      <Trash2 size={16} />
-                      Delete
-                    </button> */}
                   </>
                 )}
               </div>
@@ -166,6 +189,83 @@ const ManageUsers = () => {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+          {/* Prev Button */}
+          {currentPage > 1 && (
+            <button
+              onClick={() => {
+                setCurrentPage(currentPage - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
+              <ChevronLeft size={20} />
+            </button>
+          )}
+
+          {/* Page Numbers */}
+          {(() => {
+            const visiblePages = [];
+
+            // Always show first page
+            if (currentPage > 2) {
+              visiblePages.push(1);
+              if (currentPage > 3) visiblePages.push("ellipsis-1");
+            }
+
+            // Show current -1, current, current +1
+            for (
+              let i = Math.max(1, currentPage - 1);
+              i <= Math.min(totalPages, currentPage + 1);
+              i++
+            ) {
+              visiblePages.push(i);
+            }
+
+            // Always show last page
+            if (currentPage < totalPages - 1) {
+              if (currentPage < totalPages - 2) visiblePages.push("ellipsis-2");
+              visiblePages.push(totalPages);
+            }
+
+            return visiblePages.map((page) =>
+              typeof page === "string" && page.startsWith("ellipsis") ? (
+                <span key={page} className="px-2 text-gray-500">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={`page-${page}`}
+                  onClick={() => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-indigo-500 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white"
+                  } transition`}>
+                  {page}
+                </button>
+              )
+            );
+          })()}
+
+          {/* Next Button */}
+          {currentPage < totalPages && (
+            <button
+              onClick={() => {
+                setCurrentPage(currentPage + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
+              <ChevronRight size={20} />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
