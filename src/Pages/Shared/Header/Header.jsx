@@ -193,7 +193,7 @@ const Header = () => {
         </div>
       ) : (
         <div
-          className="bg-[#F2F5FC]"
+          className="bg-[#F2F5FC] sticky top-0 z-50 shadow"
           style={{ boxShadow: "0 8px 6px -6px #0675c140" }}>
           <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] z-50">
             <div className="navbar ">
