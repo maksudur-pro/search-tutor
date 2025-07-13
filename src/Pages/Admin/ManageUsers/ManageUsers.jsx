@@ -3,6 +3,7 @@ import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import axiosInstance from "../../../utils/axiosInstance";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ManageUsers = () => {
   const { userInfo } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const ManageUsers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 12;
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
 
@@ -182,6 +184,13 @@ const ManageUsers = () => {
                       }`}>
                       Make Guardian
                     </button>
+                    {user.accountType === "tutor" && (
+                      <button
+                        onClick={() => navigate(`/tutor/${user.uid}`)}
+                        className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
+                        Show Tutor Profile
+                      </button>
+                    )}
                   </>
                 )}
               </div>

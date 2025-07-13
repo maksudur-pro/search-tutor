@@ -294,7 +294,7 @@ const Profile = () => {
                       <span className="text-red-600">Not Given</span>
                     )}
                   </p>
-                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                  {/* <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Email
                     </strong>
@@ -304,7 +304,7 @@ const Profile = () => {
                         <span className="text-red-600">Not Given</span>
                       )}
                     </span>
-                  </p>
+                  </p> */}
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Gender
