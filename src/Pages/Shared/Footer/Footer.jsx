@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -20,10 +21,13 @@ const Footer = () => {
           </aside>
           <nav className="text-white">
             <h6 className="font-semibold text-lg">Useful Links</h6>
-            <a className="link link-hover">Terms and Conditions</a>
-            <a className="link link-hover">Hire a Tutor</a>
+            <Link to="/terms-condition" className="link link-hover">
+              Terms and Conditions
+            </Link>
+            <Link to="/hire-tutor" className="link link-hover">
+              Hire a Tutor
+            </Link>
             <a className="link link-hover">FAQ</a>
-            <a className="link link-hover">Blog</a>
           </nav>
           <nav className="text-white">
             <h6 className="font-semibold text-lg">Social Links</h6>
@@ -65,9 +69,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
-                <a
-                  href="https://www.facebook.com/share/1EzcCG7TKe/"
-                  target="_blank">
+                <a href="https://www.youtube.com/@SearchTutors" target="_blank">
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
@@ -120,7 +122,7 @@ const Footer = () => {
               </li>
               <li className="transition-all duration-300 hover:-translate-y-1">
                 <a
-                  href="https://www.facebook.com/share/1EzcCG7TKe/"
+                  href="https://wa.me/8801940261863?text=Hi%2C%20I%20am%20interested%20in%20tutoring%20services%20on%20Search%20Tutor."
                   target="_blank">
                   <svg
                     stroke="currentColor"
