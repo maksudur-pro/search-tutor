@@ -21,7 +21,7 @@ const HireTutor = () => {
     setValue,
     formState: { errors },
   } = useForm();
-
+  const [submitting, setSubmitting] = useState(false);
   const [city, setCity] = useState([]);
 
   const handleCityChange = (val) => {
@@ -30,7 +30,8 @@ const HireTutor = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("Form submitted data:", data);
+    if (submitting) return;
+    setSubmitting(true);
 
     axiosInstance
       .post("/tuition-requests", data)
@@ -43,7 +44,7 @@ const HireTutor = () => {
             timer: 2000,
             showConfirmButton: false,
           }).then(() => {
-            navigate("/"); // navigate to home after success
+            navigate("/");
           });
         } else {
           Swal.fire({
@@ -59,6 +60,9 @@ const HireTutor = () => {
           title: "Network Error",
           text: "Please try again later.",
         });
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
   };
 
@@ -336,19 +340,28 @@ const HireTutor = () => {
             <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
               <button
                 type="submit"
-                className="group mt-8 flex w-fit items-center justify-between gap-5 whitespace-nowrap rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:border-indigo-500 hover:bg-white hover:text-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                Submit
-                <svg
-                  className="transition-all duration-500 ease-out group-hover:translate-x-1"
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 448 512"
-                  height="1em"
-                  width="1em"
-                  xmlns="https://www.w3.org/2000/svg">
-                  <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
-                </svg>
+                disabled={submitting}
+                className={`group mt-8 flex w-fit items-center justify-between gap-5 whitespace-nowrap rounded-md border px-4 py-2 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    ${
+      submitting
+        ? "bg-gray-400 text-white cursor-not-allowed"
+        : "bg-indigo-500 text-white hover:border-indigo-500 hover:bg-white hover:text-indigo-500"
+    }
+  `}>
+                {submitting ? "Submitting..." : "Submit"}
+                {!submitting && (
+                  <svg
+                    className="transition-all duration-500 ease-out group-hover:translate-x-1"
+                    stroke="currentColor"
+                    fill="currentColor"
+                    strokeWidth="0"
+                    viewBox="0 0 448 512"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z" />
+                  </svg>
+                )}
               </button>
             </div>
           </form>

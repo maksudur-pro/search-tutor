@@ -184,13 +184,12 @@ const ManageUsers = () => {
                       }`}>
                       Make Guardian
                     </button>
-                    {user.accountType === "tutor" && (
-                      <button
-                        onClick={() => navigate(`/tutor/${user.uid}`)}
-                        className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
-                        Show Tutor Profile
-                      </button>
-                    )}
+
+                    <button
+                      onClick={() => navigate(`/tutor/${user.uid}`)}
+                      className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
+                      Show Tutor Profile
+                    </button>
                   </>
                 )}
               </div>
