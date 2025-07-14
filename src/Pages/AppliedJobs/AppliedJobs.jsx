@@ -73,7 +73,7 @@ const AppliedJobs = () => {
                       ? "bg-red-500"
                       : "bg-gray-400"
                   }`}>
-                  {data.status}
+                  {data.status === "reviewed" ? "Shortlisted" : data.status}
                 </span>
               </h3>
               <div className="flex items-center gap-4 mb-3">

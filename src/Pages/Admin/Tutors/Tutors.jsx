@@ -104,7 +104,10 @@ const Tutors = () => {
                 className="bg-white shadow border rounded-lg p-4 space-y-2">
                 <div className="flex items-center gap-4">
                   <img
-                    src={user?.image || "https://i.pravatar.cc/100"}
+                    src={
+                      user?.image ||
+                      "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                    }
                     alt={user?.name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
