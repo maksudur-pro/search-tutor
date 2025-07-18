@@ -60,6 +60,7 @@ const Profile = () => {
         image: userInfo.image || "",
         nid: userInfo.nid || "",
         idCard: userInfo.idCard || "",
+        isVerified: userInfo.isVerified || "",
       });
     }
   }, [userInfo]);
@@ -221,7 +222,20 @@ const Profile = () => {
           </div>
           <div className="mt-2 text-center">
             <h2 className="flex gap-2 text-xl font-bold items-center justify-center lg:text-2xl">
-              <span className="w-full md:w-fit">{formData?.name}</span>
+              <span className="w-full md:w-fit flex items-center justify-center gap-2">
+                {formData?.name || (
+                  <span className="text-red-600">Not Given</span>
+                )}{" "}
+                {formData.isVerified && (
+                  <div>
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
+                      alt="verified"
+                      className="w-7 h-7 object-cover"
+                    />
+                  </div>
+                )}
+              </span>
             </h2>
             {/* <p className="my-1 font-bold text-[rgba(34,34,34,0.5)] text-xs lg:my-2">
               Guardian / Student ID: 405284

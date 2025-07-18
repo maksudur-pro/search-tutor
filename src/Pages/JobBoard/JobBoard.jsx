@@ -3,14 +3,14 @@ import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 import axiosInstance from "../../utils/axiosInstance";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Select from "react-dropdown-select";
-import classOptions from "../../assets/classOptions.json";
+import cityOptions from "../../assets/cityOptions.json";
 
 const JobBoard = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClass, setSelectedClass] = useState([]);
+  const [selectedCity, setSelectedCity] = useState([]);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -29,11 +29,11 @@ const JobBoard = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedClass]);
+  }, [selectedCity]);
 
   const filteredJobs =
-    selectedClass.length > 0
-      ? jobs.filter((job) => job.classLevel === selectedClass[0].value)
+    selectedCity.length > 0
+      ? jobs.filter((job) => job.city === selectedCity[0].value)
       : jobs;
 
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
@@ -86,13 +86,13 @@ const JobBoard = () => {
             </div>
             <div className="">
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Filter by Class:
+                Filter by City:
               </label>
               <Select
-                options={classOptions}
-                placeholder="Select Class"
-                values={selectedClass}
-                onChange={(values) => setSelectedClass(values)}
+                options={cityOptions}
+                placeholder="Select city"
+                values={selectedCity}
+                onChange={(values) => setSelectedCity(values)}
                 clearable
               />
             </div>
@@ -104,7 +104,7 @@ const JobBoard = () => {
           {currentJobs.length === 0 ? (
             <div>
               <p className="text-center text-gray-500 text-lg">
-                No jobs found for selected class.
+                No jobs found for selected City.
               </p>
             </div>
           ) : (
