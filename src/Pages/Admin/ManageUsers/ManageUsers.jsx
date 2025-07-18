@@ -2,7 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import axiosInstance from "../../../utils/axiosInstance";
-import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import {
+  BadgeCheck,
+  CheckCheck,
+  ChevronLeft,
+  ChevronRight,
+  Trash2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ManageUsers = () => {
@@ -51,6 +57,28 @@ const ManageUsers = () => {
           icon: "error",
           title: "Failed",
           text: "Failed to update role",
+        })
+      );
+  };
+
+  const makeVerified = (uid) => {
+    axiosInstance
+      .patch(`/users/${uid}/verify`, { isVerified: true })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "User Verified",
+          text: `User has been marked as verified.`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        fetchUsers();
+      })
+      .catch(() =>
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: "Could not verify user.",
         })
       );
   };
@@ -148,7 +176,18 @@ const ManageUsers = () => {
             <div className="card-body">
               <h2 className="card-title">
                 {user.name}
-                <div className="badge badge-primary">{user.accountType}</div>
+                <div className="badge badge-primary text-white">
+                  {user.accountType}
+                </div>
+                {user.isVerified && (
+                  <div className=" ">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
+                      alt="verified"
+                      className="w-7 h-7 object-cover"
+                    />
+                  </div>
+                )}
               </h2>
               <p>{user.email}</p>
               <div className="card-actions justify-start">
@@ -190,6 +229,14 @@ const ManageUsers = () => {
                       className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
                       Show Tutor Profile
                     </button>
+                    {user?.accountType === "tutor" && !user?.isVerified && (
+                      <button
+                        onClick={() => makeVerified(user.uid)}
+                        className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-purple-600 flex items-center gap-1">
+                        <BadgeCheck size={16} />
+                        Make Verified
+                      </button>
+                    )}
                   </>
                 )}
               </div>
