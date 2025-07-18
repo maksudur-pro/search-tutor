@@ -10,6 +10,7 @@ const Main = () => {
 
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isJobBoard = location.pathname === "/job-list";
 
   return (
     <>
@@ -22,7 +23,7 @@ const Main = () => {
           {isHome && <TopBanner />}
           <Header />
           {/* This main wrapper will take all available vertical space */}
-          <main className="flex-grow">
+          <main className={`flex-grow ${isJobBoard && "bg-[#F2F5FC]"}`}>
             <Outlet />
           </main>
           <Footer />

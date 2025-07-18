@@ -318,7 +318,7 @@ const Profile = () => {
                   </p>
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
-                      Facebook
+                      Facebook Profile Link
                     </strong>
 
                     {isEditing ? (

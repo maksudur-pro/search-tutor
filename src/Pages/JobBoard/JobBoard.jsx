@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 import axiosInstance from "../../utils/axiosInstance";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Select from "react-dropdown-select";
+import classOptions from "../../assets/classOptions.json";
 
 const JobBoard = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedClass, setSelectedClass] = useState([]);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -24,10 +27,19 @@ const JobBoard = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const totalPages = Math.ceil(jobs.length / itemsPerPage);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedClass]);
+
+  const filteredJobs =
+    selectedClass.length > 0
+      ? jobs.filter((job) => job.classLevel === selectedClass[0].value)
+      : jobs;
+
+  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
   const indexOfLastJob = currentPage * itemsPerPage;
   const indexOfFirstJob = indexOfLastJob - itemsPerPage;
-  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
 
   if (loading) {
     return (
@@ -52,7 +64,7 @@ const JobBoard = () => {
           className="px-4 lg:px-8 py-4"
           style={{ boxShadow: "0 8px 6px -6px #0675c140" }}>
           <div className="flex items-center justify-between py-1 md:py-0">
-            <div className=" flex items-center gap-2 text-sm md:text-base">
+            <div className="flex items-center gap-2 text-sm md:text-base">
               <svg
                 stroke="currentColor"
                 fill="currentColor"
@@ -66,17 +78,45 @@ const JobBoard = () => {
               </svg>
               <p className="text-[#888]">
                 {" "}
-                <span className="font-semibold">{jobs.length}</span> jobs found
+                <span className="font-semibold">
+                  {filteredJobs.length}
+                </span>{" "}
+                jobs found
               </p>
+            </div>
+            <div className="">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Filter by Class:
+              </label>
+              <Select
+                options={classOptions}
+                placeholder="Select Class"
+                values={selectedClass}
+                onChange={(values) => setSelectedClass(values)}
+                clearable
+              />
             </div>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3 px-4 py-4 lg:py-8">
-          {currentJobs.map((job, index) => (
-            <TutorJobCard key={index} job={job} />
-          ))}
+
+        {/* Job Cards */}
+        <div className="px-4 py-4 lg:py-8">
+          {currentJobs.length === 0 ? (
+            <div>
+              <p className="text-center text-gray-500 text-lg">
+                No jobs found for selected class.
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3">
+              {currentJobs.map((job, index) => (
+                <TutorJobCard key={index} job={job} />
+              ))}
+            </div>
+          )}
         </div>
 
+        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-8 flex-wrap pb-8">
             {currentPage > 1 && (
