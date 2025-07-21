@@ -81,7 +81,7 @@ const JobBoard = () => {
                 <span className="font-semibold">
                   {filteredJobs.length}
                 </span>{" "}
-                jobs found
+                jobs
               </p>
             </div>
             <div className="">
@@ -94,6 +94,7 @@ const JobBoard = () => {
                 values={selectedCity}
                 onChange={(values) => setSelectedCity(values)}
                 clearable
+                style={{ width: "200px" }}
               />
             </div>
           </div>

@@ -6,9 +6,20 @@ const AppliedCard = ({ user, jobId, app, handleStatusChange, updatingId }) => {
   return (
     <div className="border rounded-lg p-4 shadow-sm bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between">
       <div className="mb-3 sm:mb-0">
-        <p className="text-sm text-gray-600 font-semibold">
-          {user?.name || "Unknown Name"}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-gray-600 font-semibold">
+            {user?.name || "Unknown Name"}
+          </p>
+          {user.isVerified && (
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
+                alt="verified"
+                className="w-5 h-5 object-cover"
+              />
+            </div>
+          )}
+        </div>
 
         <p className="text-sm text-gray-600">{user?.email || "No Email"}</p>
         <p className="text-sm text-gray-600">{user?.phone || "No Phone"}</p>
