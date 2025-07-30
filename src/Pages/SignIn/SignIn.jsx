@@ -98,9 +98,11 @@ const SignIn = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </span>
               </div>
-              <a href="#" className="text-xs text-indigo-500 hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-xs text-indigo-500 hover:underline">
                 Forget Password?
-              </a>
+              </Link>
 
               <div className="mt-6">
                 <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">

@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -30,6 +31,11 @@ const AuthProvider = ({ children }) => {
   const logOut = () => {
     setLoading(true);
     return signOut(auth).finally(() => setLoading(false));
+  };
+
+  const resetPassword = (email) => {
+    setLoading(true);
+    return sendPasswordResetEmail(auth, email).finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -82,6 +88,7 @@ const AuthProvider = ({ children }) => {
     logOut,
     setLoading,
     setUserData,
+    resetPassword,
   };
 
   return (

@@ -19,6 +19,7 @@ import Tutors from "../Pages/Admin/Tutors/Tutors";
 import JobDetails from "../Pages/JobDetails/JobDetails";
 import Terms from "../Pages/terms/Terms";
 import ApplicationsDetails from "../Pages/Admin/ApplicationsDetails/ApplicationsDetails";
+import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
 
 export const router = createBrowserRouter([
   {
@@ -118,9 +119,22 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup",
-        element: <Signup />,
+        path: "/forgot-password",
+        element: (
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        ),
       },
+      {
+        path: "/signup",
+        element: (
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        ),
+      },
+
       {
         path: "/profile",
         element: (
