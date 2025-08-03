@@ -130,7 +130,7 @@ const Header = () => {
                 size={18}
                 className="block md:hidden lg:hidden mr-2"
               />
-              Manage Users
+              Users
             </NavLink>
           </li>
 
@@ -142,6 +142,16 @@ const Header = () => {
               }>
               <BookOpen size={18} className="block md:hidden lg:hidden mr-2" />
               Tuition Requests
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/job-list"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-bold" : ""
+              }>
+              <ClipboardList size={18} className="block md:hidden lg:hidden" />
+              Job Board
             </NavLink>
           </li>
           <li>
@@ -164,7 +174,7 @@ const Header = () => {
                 size={18}
                 className="block md:hidden lg:hidden mr-2"
               />
-              Manage Applications
+              Applications
             </NavLink>
           </li>
           <li>
@@ -177,7 +187,7 @@ const Header = () => {
                 size={18}
                 className="block md:hidden lg:hidden mr-2"
               />
-              Tutors Payment
+              Payment
             </NavLink>
           </li>
         </>

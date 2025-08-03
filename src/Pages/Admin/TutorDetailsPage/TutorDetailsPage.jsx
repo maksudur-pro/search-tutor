@@ -153,6 +153,15 @@ const TutorDetailsPage = () => {
                       <span className="text-red-600">Not Given</span>
                     )}
                   </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Whatsapp Number
+                    </strong>
+
+                    {user?.whatsapp || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
+                  </p>
                   {/* <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Email
@@ -227,7 +236,7 @@ const TutorDetailsPage = () => {
                       <span className="text-red-600">Not Given</span>
                     )}
                   </p>
-                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                  {/* <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       ID Card No
                     </strong>
@@ -235,7 +244,7 @@ const TutorDetailsPage = () => {
                     {user?.idNo || (
                       <span className="text-red-600">Not Given</span>
                     )}
-                  </p>
+                  </p> */}
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Department
@@ -260,6 +269,29 @@ const TutorDetailsPage = () => {
                     </strong>
 
                     {user?.passingYear || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Experience
+                    </strong>
+
+                    {user?.experience || (
+                      <span className="text-red-600">Not Given</span>
+                    )}
+                  </p>
+                  <br />
+                  <p className="text-sm text-gray-500 italic mb-1 mt-[-0.5rem]">
+                    আমাদের রুলস হচ্ছে টিউশন কনফার্ম হওয়ার ৫-৭ দিনের মধ্যে বেতনের
+                    ৬০% টাকা পেমেন্ট করতে হবে। ( শুধুই প্রথম মাস )
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      সম্মতি
+                    </strong>
+
+                    {user?.agreement || (
                       <span className="text-red-600">Not Given</span>
                     )}
                   </p>

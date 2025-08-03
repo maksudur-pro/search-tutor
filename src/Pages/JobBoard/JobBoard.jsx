@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 import axiosInstance from "../../utils/axiosInstance";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Select from "react-dropdown-select";
 import cityOptions from "../../assets/cityOptions.json";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const JobBoard = () => {
+  const { userInfo } = useContext(AuthContext);
   const [jobs, setJobs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,12 +32,18 @@ const JobBoard = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCity]);
+  }, [selectedCity, searchTerm]);
 
-  const filteredJobs =
-    selectedCity.length > 0
-      ? jobs.filter((job) => job.city === selectedCity[0].value)
-      : jobs;
+  const filteredJobs = jobs.filter((job) => {
+    const matchesCity =
+      selectedCity.length > 0 ? job.city === selectedCity[0].value : true;
+
+    const matchesSearch = searchTerm
+      ? job.jobId?.toString().includes(searchTerm)
+      : true;
+
+    return matchesCity && matchesSearch;
+  });
 
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
   const indexOfLastJob = currentPage * itemsPerPage;
@@ -99,6 +108,21 @@ const JobBoard = () => {
             </div>
           </div>
         </div>
+        <br />
+        {userInfo?.accountType === "admin" && (
+          <div className="pl-4">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Search by Job ID:
+            </label>
+            <input
+              type="text"
+              placeholder="Enter Job ID"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm w-[200px]"
+            />
+          </div>
+        )}
 
         {/* Job Cards */}
         <div className="px-4 py-4 lg:py-8">

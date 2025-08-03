@@ -212,7 +212,9 @@ const TutorJobCard = ({ job }) => {
               <div>
                 <p>Salary</p>
                 <p className="whitespace-nowrap font-medium text-[#5c5c5c]">
-                  {job.salary} BDT
+                  {!job.salary || isNaN(Number(job.salary))
+                    ? "আলোচনা সাপেক্ষে"
+                    : `${job.salary} BDT`}
                 </p>
               </div>
             </div>

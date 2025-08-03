@@ -61,26 +61,43 @@ const ManageUsers = () => {
       );
   };
 
-  const makeVerified = (uid) => {
-    axiosInstance
-      .patch(`/users/${uid}/verify`, { isVerified: true })
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "User Verified",
-          text: `User has been marked as verified.`,
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        fetchUsers();
-      })
-      .catch(() =>
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: "Could not verify user.",
-        })
+  // const makeVerified = (uid) => {
+  //   axiosInstance
+  //     .patch(`/users/${uid}/verify`, { isVerified: true })
+  //     .then(() => {
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "User Verified",
+  //         text: `User has been marked as verified.`,
+  //         timer: 2000,
+  //         showConfirmButton: false,
+  //       });
+  //       fetchUsers();
+  //     })
+  //     .catch(() =>
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Failed",
+  //         text: "Could not verify user.",
+  //       })
+  //     );
+  // };
+
+  const handleVerifyToggle = async (uid, isVerified) => {
+    try {
+      const { data } = await axiosInstance.patch(`/users/${uid}/verify`, {
+        isVerified,
+      });
+      Swal.fire("Success", data.message, "success");
+      fetchUsers();
+    } catch (error) {
+      console.error("Verification toggle failed:", error);
+      Swal.fire(
+        "Error",
+        "Something went wrong while updating verification",
+        "error"
       );
+    }
   };
 
   if (loading || !userInfo) {
@@ -229,14 +246,22 @@ const ManageUsers = () => {
                       className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
                       Show Tutor Profile
                     </button>
-                    {user?.accountType === "tutor" && !user?.isVerified && (
-                      <button
-                        onClick={() => makeVerified(user.uid)}
-                        className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-purple-600 flex items-center gap-1">
-                        <BadgeCheck size={16} />
-                        Make Verified
-                      </button>
-                    )}
+                    {user?.accountType === "tutor" &&
+                      (user?.isVerified ? (
+                        <button
+                          onClick={() => handleVerifyToggle(user.uid, false)}
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          <BadgeCheck size={16} />
+                          Unverify
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleVerifyToggle(user.uid, true)}
+                          className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-purple-600 flex items-center gap-1">
+                          <BadgeCheck size={16} />
+                          Make Verified
+                        </button>
+                      ))}
                   </>
                 )}
               </div>
