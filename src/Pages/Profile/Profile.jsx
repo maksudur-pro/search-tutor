@@ -27,6 +27,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    whatsapp: "",
     email: "",
     gender: "",
     city: "",
@@ -48,6 +49,7 @@ const Profile = () => {
         name: userInfo.name || "",
         email: userInfo.email || "",
         phone: userInfo.phone || "",
+        whatsapp: userInfo.whatsapp || "",
         gender: userInfo.gender || "",
         city: userInfo.city || "",
         location: userInfo.location || "",
@@ -306,6 +308,29 @@ const Profile = () => {
 
                     {formData.phone || (
                       <span className="text-red-600">Not Given</span>
+                    )}
+                  </p>
+
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Whatsapp Number
+                    </strong>
+
+                    {isEditing ? (
+                      <input
+                        value={formData.whatsapp}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50 focus:border-b-2 focus:outline-none"
+                        type="tel"
+                        name="whatsapp"
+                        placeholder="Enter whatsapp number"
+                      />
+                    ) : (
+                      <>
+                        {formData.whatsapp || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
                     )}
                   </p>
                   {/* <p className="flex border-b border-gray-100 py-0.5 md:border-0">
