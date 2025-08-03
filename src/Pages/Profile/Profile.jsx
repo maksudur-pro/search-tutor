@@ -34,10 +34,12 @@ const Profile = () => {
     location: "",
     fbLink: "",
     institute: "",
-    idNo: "",
+    // idNo: "",
     department: "",
     degree: "",
     passingYear: "",
+    experience: "",
+    agreement: "",
     image: "",
     nid: "",
     idCard: "",
@@ -55,10 +57,12 @@ const Profile = () => {
         location: userInfo.location || "",
         fbLink: userInfo.fbLink || "",
         institute: userInfo.institute || "",
-        idNo: userInfo.idNo || "",
+        // idNo: userInfo.idNo || "",
         department: userInfo.department || "",
         degree: userInfo.degree || "",
         passingYear: userInfo.passingYear || "",
+        experience: userInfo.experience || "",
+        agreement: userInfo.agreement || "",
         image: userInfo.image || "",
         nid: userInfo.nid || "",
         idCard: userInfo.idCard || "",
@@ -438,7 +442,7 @@ const Profile = () => {
                       </>
                     )}
                   </p>
-                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                  {/* <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       ID Card No
                     </strong>
@@ -459,7 +463,7 @@ const Profile = () => {
                         )}
                       </>
                     )}
-                  </p>
+                  </p> */}
                   <p className="flex border-b border-gray-100 py-0.5 md:border-0">
                     <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
                       Department
@@ -493,7 +497,7 @@ const Profile = () => {
                         className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
                         type="text"
                         name="degree"
-                        placeholder="Enter your previous exam or degree"
+                        placeholder="Enter your session"
                       />
                     ) : (
                       <>
@@ -523,6 +527,67 @@ const Profile = () => {
                           <span className="text-red-600">Not Given</span>
                         )}
                       </>
+                    )}
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      Experience
+                    </strong>
+                    {isEditing ? (
+                      <input
+                        value={formData.experience}
+                        onChange={handleChange}
+                        className="w-full border-b border-black/50 focus:border-b-2 focus:outline-none"
+                        type="text"
+                        name="experience"
+                        placeholder="e.g. 2 years home tutoring"
+                      />
+                    ) : (
+                      <>
+                        {formData.experience || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </>
+                    )}
+                  </p>
+                  <br />
+                  <p className="text-sm text-gray-500 italic mb-1 mt-[-0.5rem]">
+                    আমাদের রুলস হচ্ছে টিউশন কনফার্ম হওয়ার ৫-৭ দিনের মধ্যে বেতনের
+                    ৬০% টাকা পেমেন্ট করতে হবে। ( শুধুই প্রথম মাস )
+                  </p>
+                  <p className="flex border-b border-gray-100 py-0.5 md:border-0">
+                    <strong className="block w-[8.4rem] shrink-0 text-gray-700 md:w-[13.5rem]">
+                      সম্মতি
+                    </strong>
+                    {isEditing ? (
+                      <div className="flex gap-6">
+                        <label className="flex items-center gap-1 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="agreement"
+                            value="রাজি"
+                            checked={formData.agreement === "রাজি"}
+                            onChange={handleChange}
+                          />
+                          রাজি
+                        </label>
+                        <label className="flex items-center gap-1 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="agreement"
+                            value="রাজি না"
+                            checked={formData.agreement === "রাজি না"}
+                            onChange={handleChange}
+                          />
+                          রাজি না
+                        </label>
+                      </div>
+                    ) : (
+                      <span>
+                        {formData.agreement || (
+                          <span className="text-red-600">Not Given</span>
+                        )}
+                      </span>
                     )}
                   </p>
                 </div>
