@@ -1,32 +1,64 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import axiosInstance from "../../../utils/axiosInstance";
-import {
-  BadgeCheck,
-  CheckCheck,
-  ChevronLeft,
-  ChevronRight,
-  Trash2,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { BadgeCheck } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Pagination from "../../../Component/Pagination/Pagination";
 
 const ManageUsers = () => {
   const { userInfo } = useContext(AuthContext);
-  const [users, setUsers] = useState([]);
-  const [filterRole, setFilterRole] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 12;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Parse initial URL params
+  const queryParams = new URLSearchParams(location.search);
+  const initialPage = parseInt(queryParams.get("page")) || 1;
+  const initialRole = queryParams.get("role") || "all";
+  const initialSearch = queryParams.get("search") || "";
+
+  // State for the filter role and current page
+  const [filterRole, setFilterRole] = useState(initialRole);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  // inputValue controls the input box value
+  const [inputValue, setInputValue] = useState(initialSearch);
+  // searchQuery triggers the actual API fetch
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+
+  const [users, setUsers] = useState([]);
+  const usersPerPage = 12;
 
   const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [userCounts, setUserCounts] = useState({
+    all: 0,
+    admin: 0,
+    tutor: 0,
+    guardian: 0,
+  });
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get("/users");
-      setUsers(res.data);
+      const res = await axiosInstance.get("/users", {
+        params: {
+          page: currentPage,
+          limit: usersPerPage,
+          role: filterRole === "all" ? "" : filterRole,
+          search: searchQuery,
+        },
+      });
+      if (res.data.success) {
+        setUsers(res.data.data);
+        setTotalPages(res.data.totalPages);
+        setUserCounts({
+          all: res.data.counts.totalAllUsers,
+          admin: res.data.counts.totalAdmins || 0,
+          tutor: res.data.counts.totalTutors || 0,
+          guardian: res.data.counts.totalGuardians || 0,
+        });
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -34,86 +66,53 @@ const ManageUsers = () => {
     }
   };
 
+  // Fetch users when currentPage, filterRole or searchQuery changes
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage, filterRole, searchQuery]);
 
-  const updateRole = (uid, newRole) => {
-    axiosInstance
-      .patch(`/users/${uid}/accountType`, { accountType: newRole })
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Role Updated",
-          text: `User role changed to ${newRole}`,
-          timer: 2000,
-          showConfirmButton: false,
-        });
+  // Sync URL params when state changes
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("page", currentPage);
+    if (filterRole && filterRole !== "all") params.set("role", filterRole);
+    if (searchQuery) params.set("search", searchQuery);
 
-        fetchUsers(); // Refresh list after update
-      })
-      .catch(() =>
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: "Failed to update role",
-        })
-      );
-  };
+    navigate({ search: params.toString() }, { replace: true });
+  }, [currentPage, filterRole, searchQuery, navigate]);
 
-  // const makeVerified = (uid) => {
-  //   axiosInstance
-  //     .patch(`/users/${uid}/verify`, { isVerified: true })
-  //     .then(() => {
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "User Verified",
-  //         text: `User has been marked as verified.`,
-  //         timer: 2000,
-  //         showConfirmButton: false,
-  //       });
-  //       fetchUsers();
-  //     })
-  //     .catch(() =>
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Failed",
-  //         text: "Could not verify user.",
-  //       })
-  //     );
-  // };
-
-  const handleVerifyToggle = async (uid, isVerified) => {
+  // Handle role update
+  const updateRole = async (uid, newRole) => {
     try {
-      const { data } = await axiosInstance.patch(`/users/${uid}/verify`, {
-        isVerified,
+      await axiosInstance.patch(`/users/${uid}/accountType`, {
+        accountType: newRole,
       });
-      Swal.fire("Success", data.message, "success");
+      Swal.fire("Success", `Role updated to ${newRole}`, "success");
       fetchUsers();
-    } catch (error) {
-      console.error("Verification toggle failed:", error);
-      Swal.fire(
-        "Error",
-        "Something went wrong while updating verification",
-        "error"
-      );
+    } catch (err) {
+      Swal.fire("Error", "Failed to update role", "error");
     }
   };
 
-  const handleRedVerifyToggle = async (uid, isRedVerified) => {
+  // Handle verification toggle
+  const handleVerifyToggle = async (uid, isVerified) => {
     try {
-      const { data } = await axiosInstance.patch(`/users/${uid}/redVerify`, {
-        isRedVerified,
-      });
-      Swal.fire("Success", data.message, "success");
+      await axiosInstance.patch(`/users/${uid}/verify`, { isVerified });
+      Swal.fire("Success", "Verification status updated", "success");
       fetchUsers();
     } catch (error) {
-      console.error("Verification toggle failed:", error);
-      Swal.fire(
-        "Error",
-        "Something went wrong while updating verification",
-        "error"
-      );
+      Swal.fire("Error", "Failed to update verification", "error");
+    }
+  };
+
+  // Handle red verification toggle
+  const handleRedVerifyToggle = async (uid, isRedVerified) => {
+    try {
+      await axiosInstance.patch(`/users/${uid}/redVerify`, { isRedVerified });
+      Swal.fire("Success", "Red verification status updated", "success");
+      fetchUsers();
+    } catch (error) {
+      Swal.fire("Error", "Failed to update red verification", "error");
     }
   };
 
@@ -132,27 +131,6 @@ const ManageUsers = () => {
       </p>
     );
   }
-
-  // Filter + search users
-  const filteredUsers = users.filter(
-    (user) =>
-      (filterRole === "all" || user.accountType === filterRole) &&
-      (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * usersPerPage,
-    currentPage * usersPerPage
-  );
-
-  const userCounts = {
-    all: users.length,
-    admin: users.filter((u) => u.accountType === "admin").length,
-    tutor: users.filter((u) => u.accountType === "tutor").length,
-    guardian: users.filter((u) => u.accountType === "guardian").length,
-  };
 
   return (
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10">
@@ -180,22 +158,44 @@ const ManageUsers = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-6">
-        <input
-          type="text"
-          placeholder="Search by name or email"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="input input-bordered w-full max-w-xs"
-        />
+      <div className="flex justify-center mb-6 p-4">
+        <div className="flex items-center gap-2 w-full max-w-lg">
+          <input
+            type="text"
+            placeholder="Search by name or email"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="input input-bordered w-full"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearchQuery(inputValue);
+                setCurrentPage(1);
+              }
+            }}
+          />
+          <button
+            onClick={() => {
+              setSearchQuery(inputValue);
+              setCurrentPage(1);
+            }}
+            className="btn btn-primary px-4">
+            Search
+          </button>
+          <button
+            onClick={() => {
+              setInputValue("");
+              setSearchQuery("");
+              setCurrentPage(1);
+            }}
+            className="btn btn-outline">
+            Clear
+          </button>
+        </div>
       </div>
 
       {/* User Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4 gap-6">
-        {paginatedUsers.map((user) => (
+        {users.map((user) => (
           <div key={user.uid} className="card bg-base-100 shadow-md">
             <figure>
               <img
@@ -203,75 +203,53 @@ const ManageUsers = () => {
                   user?.image ||
                   "https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
                 }
-                alt="user-image"
+                alt="user"
                 className="h-80 w-full object-cover object-top"
               />
             </figure>
             <div className="card-body">
               <h2 className="card-title">
                 {user.name}
-                <div className="badge badge-primary text-white">
+                <div className="badge badge-primary text-white ml-2">
                   {user.accountType}
                 </div>
                 {user.isVerified && !user.isRedVerified && (
-                  <div className=" ">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
-                      alt="verified"
-                      className="w-7 h-7 object-cover"
-                    />
-                  </div>
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
+                    alt="verified"
+                    className="w-7 h-7 object-cover inline-block ml-2"
+                  />
                 )}
                 {user.isRedVerified && !user.isVerified && (
-                  <div>
-                    <img
-                      src="https://img.icons8.com/?size=30&id=99285&format=png"
-                      srcSet="https://img.icons8.com/?size=30&id=99285&format=png 1x,https://img.icons8.com/?size=60&id=99285 format=png 2x"
-                      alt="Red Verified Badge"
-                      className="w-7 h-7 object-cover"
-                      style={{
-                        filter:
-                          "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
-                      }}
-                    />
-                  </div>
+                  <img
+                    src="https://img.icons8.com/?size=30&id=99285&format=png"
+                    alt="Red Verified Badge"
+                    className="w-7 h-7 object-cover inline-block ml-2"
+                    style={{
+                      filter:
+                        "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
+                    }}
+                  />
                 )}
               </h2>
               <p>{user.email}</p>
-              <div className="card-actions justify-start">
+
+              <div className="card-actions justify-start flex-wrap gap-2">
                 {user.uid !== userInfo.uid && (
                   <>
-                    <button
-                      onClick={() => updateRole(user.uid, "admin")}
-                      disabled={user.accountType === "admin"}
-                      className={`badge badge-outline bg-indigo-500 text-white cursor-pointer mr-2 px-3 py-1 rounded-md font-medium transition-colors duration-200 ${
-                        user.accountType === "admin"
-                          ? "cursor-not-allowed opacity-50"
-                          : "hover:bg-indigo-600"
-                      }`}>
-                      Make Admin
-                    </button>
-                    <button
-                      onClick={() => updateRole(user.uid, "tutor")}
-                      disabled={user.accountType === "tutor"}
-                      className={`badge badge-outline bg-indigo-500 text-white cursor-pointer mr-2 px-3 py-1 rounded-md font-medium transition-colors duration-200 ${
-                        user.accountType === "tutor"
-                          ? "cursor-not-allowed opacity-50"
-                          : "hover:bg-indigo-600"
-                      }`}>
-                      Make Tutor
-                    </button>
-                    <button
-                      onClick={() => updateRole(user.uid, "guardian")}
-                      disabled={user.accountType === "guardian"}
-                      className={`badge badge-outline bg-indigo-500 text-white cursor-pointer mr-2 px-3 py-1 rounded-md font-medium transition-colors duration-200 ${
-                        user.accountType === "guardian"
-                          ? "cursor-not-allowed opacity-50"
-                          : "hover:bg-indigo-600"
-                      }`}>
-                      Make Guardian
-                    </button>
-
+                    {["admin", "tutor", "guardian"].map((role) => (
+                      <button
+                        key={role}
+                        onClick={() => updateRole(user.uid, role)}
+                        disabled={user.accountType === role}
+                        className={`badge badge-outline bg-indigo-500 text-white mr-2 px-3 py-1 rounded-md font-medium transition-colors duration-200 ${
+                          user.accountType === role
+                            ? "cursor-not-allowed opacity-50"
+                            : "hover:bg-indigo-600"
+                        }`}>
+                        Make {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </button>
+                    ))}
                     <button
                       onClick={() => navigate(`/tutor/${user.uid}`)}
                       className="badge badge-outline bg-green-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-green-600">
@@ -282,14 +260,14 @@ const ManageUsers = () => {
                       (user?.isVerified ? (
                         <button
                           onClick={() => handleVerifyToggle(user.uid, false)}
-                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 flex items-center gap-1">
                           <BadgeCheck size={16} />
                           Unverify
                         </button>
                       ) : (
                         <button
                           onClick={() => handleVerifyToggle(user.uid, true)}
-                          className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-purple-600 flex items-center gap-1">
+                          className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md hover:bg-purple-600 flex items-center gap-1">
                           <BadgeCheck size={16} />
                           Make Verified
                         </button>
@@ -299,14 +277,14 @@ const ManageUsers = () => {
                       (user?.isRedVerified ? (
                         <button
                           onClick={() => handleRedVerifyToggle(user.uid, false)}
-                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 flex items-center gap-1">
                           <BadgeCheck size={16} />
                           Unverify (Red)
                         </button>
                       ) : (
                         <button
                           onClick={() => handleRedVerifyToggle(user.uid, true)}
-                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 flex items-center gap-1">
                           <BadgeCheck size={16} />
                           Give Red Badge
                         </button>
@@ -321,79 +299,14 @@ const ManageUsers = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
-          {/* Prev Button */}
-          {currentPage > 1 && (
-            <button
-              onClick={() => {
-                setCurrentPage(currentPage - 1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
-              <ChevronLeft size={20} />
-            </button>
-          )}
-
-          {/* Page Numbers */}
-          {(() => {
-            const visiblePages = [];
-
-            // Always show first page
-            if (currentPage > 2) {
-              visiblePages.push(1);
-              if (currentPage > 3) visiblePages.push("ellipsis-1");
-            }
-
-            // Show current -1, current, current +1
-            for (
-              let i = Math.max(1, currentPage - 1);
-              i <= Math.min(totalPages, currentPage + 1);
-              i++
-            ) {
-              visiblePages.push(i);
-            }
-
-            // Always show last page
-            if (currentPage < totalPages - 1) {
-              if (currentPage < totalPages - 2) visiblePages.push("ellipsis-2");
-              visiblePages.push(totalPages);
-            }
-
-            return visiblePages.map((page) =>
-              typeof page === "string" && page.startsWith("ellipsis") ? (
-                <span key={page} className="px-2 text-gray-500">
-                  ...
-                </span>
-              ) : (
-                <button
-                  key={`page-${page}`}
-                  onClick={() => {
-                    setCurrentPage(page);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className={`px-3 py-1 rounded ${
-                    currentPage === page
-                      ? "bg-indigo-500 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white"
-                  } transition`}>
-                  {page}
-                </button>
-              )
-            );
-          })()}
-
-          {/* Next Button */}
-          {currentPage < totalPages && (
-            <button
-              onClick={() => {
-                setCurrentPage(currentPage + 1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
-              <ChevronRight size={20} />
-            </button>
-          )}
-        </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={(page) => {
+            setCurrentPage(page);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
       )}
     </div>
   );
