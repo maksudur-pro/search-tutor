@@ -6,11 +6,10 @@ import {
   Phone,
   MapPin,
   Mail,
-  AlertCircle,
   GraduationCap,
-  Pencil,
   Camera,
-  CloudUpload,
+  LayoutDashboard,
+  CheckCircle,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import UploadBox from "../../Component/UploadBox/UploadBox";
@@ -19,10 +18,16 @@ import ImagePreview from "../../Component/ImagePreview/ImagePreview";
 import axiosInstance from "../../utils/axiosInstance";
 
 const Profile = () => {
-  const { userInfo, loading, setUserData } = useContext(AuthContext);
+  const { user, userInfo, loading, setUserData, sendVerificationEmail } =
+    useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [nidUploading, setNidUploading] = useState(false);
   const [idCardUploading, setIdCardUploading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -70,6 +75,32 @@ const Profile = () => {
       });
     }
   }, [userInfo]);
+
+  console.log(userInfo);
+
+  const handleVerifyEmail = async () => {
+    setIsVerifying(true);
+    const result = await sendVerificationEmail();
+    setIsVerifying(false);
+
+    if (result.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Verification Email Sent",
+        text: "Please check your inbox and verify your email.",
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      closeModal();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Send Verification",
+        text: result.error?.message || "Something went wrong.",
+      });
+    }
+  };
 
   if (loading || !userInfo) {
     return (
@@ -274,10 +305,74 @@ const Profile = () => {
               <Mail size={16} />
               Email
             </p>
-            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+            <p className="ms-6 mt-1 text-sm font-semibold text-[rgba(34,34,34,0.5)] flex items-center gap-2">
               {formData.email || "No data found"}
+              {user.emailVerified ? (
+                <span className="badge  badge-success badge-outline badge-sm cursor-default select-none flex items-center gap-1">
+                  <CheckCircle size={14} />
+                  Verified
+                </span>
+              ) : (
+                <button
+                  onClick={openModal}
+                  className="badge badge-error badge-outline badge-sm cursor-pointer hover:bg-error-focus transition text-[8px] md:text-[12px] lg:text-[12px]"
+                  title="Click to verify email"
+                  disabled={isVerifying}>
+                  {isVerifying ? "Sending..." : "Not Verified"}
+                </button>
+              )}
             </p>
           </div>
+
+          {/* Modal */}
+          {isModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-md p-6 max-w-sm w-full shadow-lg">
+                <h3 className="text-lg font-semibold mb-4">
+                  Verify Your Email
+                </h3>
+                <p className="mb-6">
+                  Do you want to send a verification link to <br />
+                  <strong>{formData.email}</strong>?
+                </p>
+                <div className="flex items-center justify-center gap-3">
+                  <button
+                    onClick={closeModal}
+                    className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition"
+                    disabled={isVerifying}>
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleVerifyEmail}
+                    className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+                    disabled={isVerifying}>
+                    {isVerifying ? "Sending..." : "Send Verification"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* <div className="mb-2 mt-4 text-left block">
+            <p className="flex items-center gap-2 font-bold">
+              <Mail size={16} />
+              Email
+            </p>
+            <p className="ms-6 mt-1 text-sm font-semibold text-[rgba(34,34,34,0.5)] flex items-center gap-2">
+              {formData.email || "No data found"}
+              {formData.emailVerified ? (
+                <span className="badge badge-neutral badge-outline badge-sm cursor-default select-none">
+                  Verified
+                </span>
+              ) : (
+                <button
+                  className="badge badge-error badge-outline badge-sm cursor-pointer hover:bg-error-focus transition"
+                  title="Click to verify email">
+                  Not Verified
+                </button>
+              )}
+            </p>
+          </div> */}
+
           <div className="mb-2 mt-4 text-left block">
             <p className="flex items-center gap-2 font-bold">
               <Phone size={16} />
@@ -564,7 +659,16 @@ const Profile = () => {
                       </>
                     )}
                   </p>
-                  <br />
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h2 className="flex items-center justify-center gap-3 text-lg font-semibold md:justify-start md:text-xl">
+                <LayoutDashboard className="w-6 h-6" />
+                Platform charge
+              </h2>
+              <div className="mt-3 flex flex-col gap-2 text-sm text-[rgba(34,34,34,0.5)] md:ms-9 ">
+                <div className="space-y-1 ">
                   <p className="text-sm text-gray-500 italic mb-1 mt-[-0.5rem]">
                     আমাদের রুলস হচ্ছে টিউশন কনফার্ম হওয়ার ৫-৭ দিনের মধ্যে বেতনের
                     ৬০% টাকা পেমেন্ট করতে হবে। ( শুধুই প্রথম মাস )

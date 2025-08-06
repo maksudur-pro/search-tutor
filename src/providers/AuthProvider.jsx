@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -36,6 +37,19 @@ const AuthProvider = ({ children }) => {
   const resetPassword = (email) => {
     setLoading(true);
     return sendPasswordResetEmail(auth, email).finally(() => setLoading(false));
+  };
+
+  const sendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        return { success: true, message: "Verification email sent." };
+      } catch (error) {
+        return { success: false, error };
+      }
+    } else {
+      return { success: false, error: "No user logged in." };
+    }
   };
 
   useEffect(() => {
@@ -89,6 +103,7 @@ const AuthProvider = ({ children }) => {
     setLoading,
     setUserData,
     resetPassword,
+    sendVerificationEmail,
   };
 
   return (
