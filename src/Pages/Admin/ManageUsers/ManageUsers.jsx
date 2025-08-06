@@ -100,6 +100,23 @@ const ManageUsers = () => {
     }
   };
 
+  const handleRedVerifyToggle = async (uid, isRedVerified) => {
+    try {
+      const { data } = await axiosInstance.patch(`/users/${uid}/redVerify`, {
+        isRedVerified,
+      });
+      Swal.fire("Success", data.message, "success");
+      fetchUsers();
+    } catch (error) {
+      console.error("Verification toggle failed:", error);
+      Swal.fire(
+        "Error",
+        "Something went wrong while updating verification",
+        "error"
+      );
+    }
+  };
+
   if (loading || !userInfo) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -196,12 +213,26 @@ const ManageUsers = () => {
                 <div className="badge badge-primary text-white">
                   {user.accountType}
                 </div>
-                {user.isVerified && (
+                {user.isVerified && !user.isRedVerified && (
                   <div className=" ">
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
                       alt="verified"
                       className="w-7 h-7 object-cover"
+                    />
+                  </div>
+                )}
+                {user.isRedVerified && !user.isVerified && (
+                  <div>
+                    <img
+                      src="https://img.icons8.com/?size=30&id=99285&format=png"
+                      srcSet="https://img.icons8.com/?size=30&id=99285&format=png 1x,https://img.icons8.com/?size=60&id=99285 format=png 2x"
+                      alt="Red Verified Badge"
+                      className="w-7 h-7 object-cover"
+                      style={{
+                        filter:
+                          "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
+                      }}
                     />
                   </div>
                 )}
@@ -247,6 +278,7 @@ const ManageUsers = () => {
                       Show Tutor Profile
                     </button>
                     {user?.accountType === "tutor" &&
+                      !user?.isRedVerified &&
                       (user?.isVerified ? (
                         <button
                           onClick={() => handleVerifyToggle(user.uid, false)}
@@ -260,6 +292,23 @@ const ManageUsers = () => {
                           className="badge badge-outline bg-purple-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-purple-600 flex items-center gap-1">
                           <BadgeCheck size={16} />
                           Make Verified
+                        </button>
+                      ))}
+                    {user?.accountType === "tutor" &&
+                      !user?.isVerified &&
+                      (user?.isRedVerified ? (
+                        <button
+                          onClick={() => handleRedVerifyToggle(user.uid, false)}
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          <BadgeCheck size={16} />
+                          Unverify (Red)
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleRedVerifyToggle(user.uid, true)}
+                          className="badge badge-outline bg-red-500 text-white px-3 py-1 rounded-md font-medium transition-colors duration-200 hover:bg-red-600 flex items-center gap-1">
+                          <BadgeCheck size={16} />
+                          Give Red Badge
                         </button>
                       ))}
                   </>
