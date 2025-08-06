@@ -1,54 +1,123 @@
 import React, { useContext, useEffect, useState } from "react";
 import TutorJobCard from "../../Component/TutorJobCard/TutorJobCard";
 import axiosInstance from "../../utils/axiosInstance";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import Select from "react-dropdown-select";
 import cityOptions from "../../assets/cityOptions.json";
 import { AuthContext } from "../../providers/AuthProvider";
+import Pagination from "../../Component/Pagination/Pagination";
+import { useSearchParams } from "react-router-dom";
 
 const JobBoard = () => {
   const { userInfo } = useContext(AuthContext);
+
   const [jobs, setJobs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCity, setSelectedCity] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalJobs, setTotalJobs] = useState(0);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const pageFromUrl = parseInt(searchParams.get("page")) || 1;
+  const cityFromUrl = searchParams.get("city") || "";
+  const searchFromUrl = searchParams.get("search") || "";
+
+  const [selectedCity, setSelectedCity] = useState(
+    cityFromUrl ? [{ value: cityFromUrl, label: cityFromUrl }] : []
+  );
+  const [searchTerm, setSearchTerm] = useState(searchFromUrl);
+
   const itemsPerPage = 10;
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+
     axiosInstance
-      .get("/jobs")
+      .get("/jobs", {
+        params: {
+          page: pageFromUrl,
+          limit: itemsPerPage,
+          city: cityFromUrl || undefined,
+          search: searchFromUrl || undefined,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           setJobs(res.data.data);
+          setTotalPages(res.data.totalPages);
+          setTotalJobs(res.data.totalJobs);
         } else {
           setError("Failed to load jobs");
+          setJobs([]);
+          setTotalPages(1);
+          setTotalJobs(0);
         }
       })
-      .catch(() => setError("Error fetching jobs"))
+      .catch(() => {
+        setError("Error fetching jobs");
+        setJobs([]);
+        setTotalPages(1);
+        setTotalJobs(0);
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [pageFromUrl, cityFromUrl, searchFromUrl]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCity, searchTerm]);
+  const handleCityChange = (values) => {
+    setSelectedCity(values);
 
-  const filteredJobs = jobs.filter((job) => {
-    const matchesCity =
-      selectedCity.length > 0 ? job.city === selectedCity[0].value : true;
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (values.length > 0) {
+        params.set("city", values[0].value);
+      } else {
+        params.delete("city");
+      }
+      params.set("page", "1");
+      if (searchTerm) {
+        params.set("search", searchTerm);
+      }
+      return params;
+    });
+  };
 
-    const matchesSearch = searchTerm
-      ? job.jobId?.toString().includes(searchTerm)
-      : true;
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
 
-    return matchesCity && matchesSearch;
-  });
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (val) {
+        params.set("search", val);
+      } else {
+        params.delete("search");
+      }
+      params.set("page", "1");
+      if (selectedCity.length > 0) {
+        params.set("city", selectedCity[0].value);
+      }
+      return params;
+    });
+  };
 
-  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
-  const indexOfLastJob = currentPage * itemsPerPage;
-  const indexOfFirstJob = indexOfLastJob - itemsPerPage;
-  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+  const handlePageChange = (page) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("page", page);
+      if (selectedCity.length > 0) {
+        params.set("city", selectedCity[0].value);
+      } else {
+        params.delete("city");
+      }
+      if (searchTerm) {
+        params.set("search", searchTerm);
+      } else {
+        params.delete("search");
+      }
+      return params;
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (loading) {
     return (
@@ -60,10 +129,6 @@ const JobBoard = () => {
 
   if (error) {
     return <p className="text-center p-4 text-red-500">{error}</p>;
-  }
-
-  if (jobs.length === 0) {
-    return <p className="text-center p-4">No jobs found.</p>;
   }
 
   return (
@@ -82,18 +147,14 @@ const JobBoard = () => {
                 className="text-indigo-500"
                 height="1em"
                 width="1em"
-                xmlns="https://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg">
                 <path d="M149.333 216v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-80c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zM125.333 32H24C10.745 32 0 42.745 0 56v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zm80 448H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm-24-424v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24zm24 264H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24z"></path>
               </svg>
               <p className="text-[#888]">
-                {" "}
-                <span className="font-semibold">
-                  {filteredJobs.length}
-                </span>{" "}
-                jobs
+                <span className="font-semibold">{totalJobs}</span> jobs
               </p>
             </div>
-            <div className="">
+            <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Filter by City:
               </label>
@@ -101,14 +162,16 @@ const JobBoard = () => {
                 options={cityOptions}
                 placeholder="Select city"
                 values={selectedCity}
-                onChange={(values) => setSelectedCity(values)}
+                onChange={handleCityChange}
                 clearable
                 style={{ width: "200px" }}
               />
             </div>
           </div>
         </div>
+
         <br />
+
         {userInfo?.accountType === "admin" && (
           <div className="pl-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -118,71 +181,31 @@ const JobBoard = () => {
               type="text"
               placeholder="Enter Job ID"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm w-[200px]"
             />
           </div>
         )}
 
         {/* Job Cards */}
-        <div className="px-4 py-4 lg:py-8">
-          {currentJobs.length === 0 ? (
-            <div>
-              <p className="text-center text-gray-500 text-lg">
-                No jobs found for selected City.
-              </p>
-            </div>
-          ) : (
+        {jobs.length === 0 ? (
+          <p className="text-center p-4">No jobs found.</p>
+        ) : (
+          <div className="px-4 py-4 lg:py-8">
             <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3">
-              {currentJobs.map((job, index) => (
-                <TutorJobCard key={index} job={job} />
+              {jobs.map((job) => (
+                <TutorJobCard key={job._id} job={job} />
               ))}
             </div>
-          )}
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-8 flex-wrap pb-8">
-            {currentPage > 1 && (
-              <button
-                onClick={() => {
-                  setCurrentPage(currentPage - 1);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
-                <ChevronLeft size={20} />
-              </button>
-            )}
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={`page-${page}`}
-                onClick={() => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className={`px-3 py-1 rounded ${
-                  currentPage === page
-                    ? "bg-indigo-500 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white"
-                } transition`}>
-                {page}
-              </button>
-            ))}
-
-            {currentPage < totalPages && (
-              <button
-                onClick={() => {
-                  setCurrentPage(currentPage + 1);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-indigo-500 hover:text-white transition">
-                <ChevronRight size={20} />
-              </button>
-            )}
           </div>
         )}
+
+        {/* Pagination */}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={pageFromUrl}
+          setCurrentPage={handlePageChange}
+        />
       </div>
     </div>
   );
