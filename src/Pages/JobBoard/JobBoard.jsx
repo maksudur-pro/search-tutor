@@ -81,24 +81,60 @@ const JobBoard = () => {
     });
   };
 
-  const handleSearchChange = (e) => {
-    const val = e.target.value;
-    setSearchTerm(val);
-
+  const handleSearchSubmit = () => {
     setSearchParams((prev) => {
       const params = new URLSearchParams(prev);
-      if (val) {
-        params.set("search", val);
+      if (searchTerm) {
+        params.set("search", searchTerm);
       } else {
         params.delete("search");
       }
       params.set("page", "1");
       if (selectedCity.length > 0) {
         params.set("city", selectedCity[0].value);
+      } else {
+        params.delete("city");
       }
       return params;
     });
   };
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setSelectedCity([]);
+
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.delete("search");
+      params.delete("city");
+      params.set("page", "1");
+      return params;
+    });
+  };
+
+  // const handleSearchChange = (e) => {
+  //   const val = e.target.value;
+  //   setSearchTerm(val);
+
+  //   setSearchParams((prev) => {
+  //     const params = new URLSearchParams(prev);
+  //     if (val) {
+  //       params.set("search", val);
+  //     } else {
+  //       params.delete("search");
+  //     }
+  //     params.set("page", "1");
+  //     if (selectedCity.length > 0) {
+  //       params.set("city", selectedCity[0].value);
+  //     }
+  //     return params;
+  //   });
+  // };
 
   const handlePageChange = (page) => {
     setSearchParams((prev) => {
@@ -154,6 +190,7 @@ const JobBoard = () => {
                 <span className="font-semibold">{totalJobs}</span> jobs
               </p>
             </div>
+
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Filter by City:
@@ -172,7 +209,7 @@ const JobBoard = () => {
 
         <br />
 
-        {userInfo?.accountType === "admin" && (
+        {/* {userInfo?.accountType === "admin" && (
           <div className="pl-4">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Search by Job ID:
@@ -181,9 +218,33 @@ const JobBoard = () => {
               type="text"
               placeholder="Enter Job ID"
               value={searchTerm}
-              onChange={handleSearchChange}
+              onClick={handleSearchChange}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm w-[200px]"
             />
+          </div>
+        )} */}
+        {userInfo?.accountType === "admin" && (
+          <div className="p-4">
+            <div className="flex items-center gap-2">
+              <input
+                name="jobId"
+                type="text"
+                placeholder="Enter Job ID"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm w-[200px]"
+              />
+              <button
+                onClick={handleSearchSubmit}
+                className="btn btn-sm bg-indigo-500 text-white rounded hover:bg-indigo-600 transition">
+                Search
+              </button>
+              <button
+                onClick={handleClearFilters}
+                className="btn btn-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">
+                Clear
+              </button>
+            </div>
           </div>
         )}
 
