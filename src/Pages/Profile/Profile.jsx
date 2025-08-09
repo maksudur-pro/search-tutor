@@ -395,28 +395,30 @@ const Profile = () => {
               </p>
             </div>
           </div>
-          <div className="rounded-xl bg-blue-50 border border-blue-200 shadow p-4">
-            <h3 className="text-lg font-semibold text-blue-800 flex items-center gap-2 mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-blue-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 
+          {formData?.adminNote && (
+            <div className="rounded-xl bg-blue-50 border border-blue-200 shadow p-4">
+              <h3 className="text-lg font-semibold text-blue-800 flex items-center gap-2 mb-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 
                9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
-                />
-              </svg>
-              Tutor Note
-            </h3>
-            <p className="text-gray-700 whitespace-pre-wrap min-h-[60px]">
-              {formData?.adminNote}
-            </p>
-          </div>
+                  />
+                </svg>
+                Tutor Note
+              </h3>
+              <p className="text-gray-700 whitespace-pre-wrap min-h-[60px]">
+                {formData?.adminNote}
+              </p>
+            </div>
+          )}
         </div>
         {/* Sidebar end */}
         <div className="rounded-2xl bg-white border border-indigo-100 shadow-md p-4 pb-8 md:p-6 w-full lg:w-[60%]">
