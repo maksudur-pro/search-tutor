@@ -48,6 +48,7 @@ const Profile = () => {
     image: "",
     nid: "",
     idCard: "",
+    adminNote: "",
   });
 
   useEffect(() => {
@@ -72,11 +73,10 @@ const Profile = () => {
         nid: userInfo.nid || "",
         idCard: userInfo.idCard || "",
         isVerified: userInfo.isVerified || "",
+        adminNote: userInfo.adminNote || "",
       });
     }
   }, [userInfo]);
-
-  console.log(userInfo);
 
   const handleVerifyEmail = async () => {
     setIsVerifying(true);
@@ -221,138 +221,139 @@ const Profile = () => {
     <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] my-10 p-4">
       <div className="flex items-start flex-col md:flex-row lg:flex-row gap-4 w-full">
         {/* Sidebar */}
-        <div className="rounded-xl bg-white border border-indigo-100 shadow-md p-4 pb-8 text-center mb-4 w-full lg:w-[40%]">
-          <div className="flex justify-center">
-            <div className=" relative size-fit min-w-[100px]">
-              <img
-                alt={formData?.name}
-                className="w-36 h-36 object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
-                src={
-                  formData.image ||
-                  "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
-                }
-              />
+        <div className="flex flex-col gap-4 w-full lg:w-[40%]">
+          <div className="rounded-xl bg-white border border-indigo-100 shadow-md p-4 pb-8 text-center mb-4 ">
+            <div className="flex justify-center">
+              <div className=" relative size-fit min-w-[100px]">
+                <img
+                  alt={formData?.name}
+                  className="w-36 h-36 object-cover shadow-[0px_3px_8px_rgba(0,0,0,0.24)] rounded-full"
+                  src={
+                    formData.image ||
+                    "	https://caretutor-space-file.nyc3.cdn.digitaloceanspaces.com/assets/img/avataaar/Profile-Picture.png"
+                  }
+                />
 
-              {isEditing && (
-                <>
-                  {/* Hidden File Input */}
-                  <input
-                    id="profileImageUpload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleProfileImageChange}
-                  />
-
-                  {/* Edit Icon */}
-                  <label
-                    htmlFor="profileImageUpload"
-                    className="absolute bottom-0 right-0 cursor-pointer"
-                    title="Change Profile Picture">
-                    <div className="flex size-[2.1rem] items-center justify-center rounded-full border-2 border-white bg-indigo-500 text-white shadow-md hover:bg-indigo-600 transition">
-                      <Camera size={18} />
-                    </div>
-                  </label>
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2 text-center">
-            <h2 className="flex gap-2 text-xl font-bold items-center justify-center lg:text-2xl">
-              <span className="w-full md:w-fit flex items-center justify-center gap-2">
-                {formData?.name || (
-                  <span className="text-red-600">Not Given</span>
-                )}{" "}
-                {formData.isVerified && !formData.isRedVerified && (
-                  <div className=" ">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
-                      alt="verified"
-                      className="w-7 h-7 object-cover"
+                {isEditing && (
+                  <>
+                    {/* Hidden File Input */}
+                    <input
+                      id="profileImageUpload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleProfileImageChange}
                     />
-                  </div>
-                )}
-                {formData.isRedVerified && !formData.isVerified && (
-                  <div>
-                    <img
-                      src="https://img.icons8.com/?size=30&id=99285&format=png"
-                      srcSet="https://img.icons8.com/?size=30&id=99285&format=png 1x,https://img.icons8.com/?size=60&id=99285 format=png 2x"
-                      alt="Red Verified Badge"
-                      className="w-7 h-7 object-cover"
-                      style={{
-                        filter:
-                          "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
-                      }}
-                    />
-                  </div>
-                )}
-              </span>
-            </h2>
-            {/* <p className="my-1 font-bold text-[rgba(34,34,34,0.5)] text-xs lg:my-2">
-              Guardian / Student ID: 405284
-            </p> */}
-            <button onClick={handleEditToggle} className="btn w-full my-4">
-              {isEditing ? "Cancel" : "Edit Information"}
-            </button>
-            {isEditing && (
-              <button onClick={handleSave} className="btn w-full ">
-                Save Changes
-              </button>
-            )}
-          </div>
-          <div className="mb-2 mt-4 text-left block">
-            <p className="flex items-center gap-2 font-bold">
-              <Mail size={16} />
-              Email
-            </p>
-            <p className="ms-6 mt-1 text-sm font-semibold text-[rgba(34,34,34,0.5)] flex items-center gap-2">
-              {formData.email || "No data found"}
-              {user.emailVerified ? (
-                <span className="badge  badge-success badge-outline badge-sm cursor-default select-none flex items-center gap-1">
-                  <CheckCircle size={14} />
-                  Verified
-                </span>
-              ) : (
-                <button
-                  onClick={openModal}
-                  className="badge badge-error badge-outline badge-sm cursor-pointer hover:bg-error-focus transition text-[8px] md:text-[12px] lg:text-[12px]"
-                  title="Click to verify email"
-                  disabled={isVerifying}>
-                  {isVerifying ? "Sending..." : "Not Verified"}
-                </button>
-              )}
-            </p>
-          </div>
 
-          {/* Modal */}
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-md p-6 max-w-sm w-full shadow-lg">
-                <h3 className="text-lg font-semibold mb-4">
-                  Verify Your Email
-                </h3>
-                <p className="mb-6">
-                  Do you want to send a verification link to <br />
-                  <strong>{formData.email}</strong>?
-                </p>
-                <div className="flex items-center justify-center gap-3">
-                  <button
-                    onClick={closeModal}
-                    className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition"
-                    disabled={isVerifying}>
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleVerifyEmail}
-                    className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
-                    disabled={isVerifying}>
-                    {isVerifying ? "Sending..." : "Send Verification"}
-                  </button>
-                </div>
+                    {/* Edit Icon */}
+                    <label
+                      htmlFor="profileImageUpload"
+                      className="absolute bottom-0 right-0 cursor-pointer"
+                      title="Change Profile Picture">
+                      <div className="flex size-[2.1rem] items-center justify-center rounded-full border-2 border-white bg-indigo-500 text-white shadow-md hover:bg-indigo-600 transition">
+                        <Camera size={18} />
+                      </div>
+                    </label>
+                  </>
+                )}
               </div>
             </div>
-          )}
-          {/* <div className="mb-2 mt-4 text-left block">
+            <div className="mt-2 text-center">
+              <h2 className="flex gap-2 text-xl font-bold items-center justify-center lg:text-2xl">
+                <span className="w-full md:w-fit flex items-center justify-center gap-2">
+                  {formData?.name || (
+                    <span className="text-red-600">Not Given</span>
+                  )}{" "}
+                  {formData.isVerified && !formData.isRedVerified && (
+                    <div className=" ">
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
+                        alt="verified"
+                        className="w-7 h-7 object-cover"
+                      />
+                    </div>
+                  )}
+                  {formData.isRedVerified && !formData.isVerified && (
+                    <div>
+                      <img
+                        src="https://img.icons8.com/?size=30&id=99285&format=png"
+                        srcSet="https://img.icons8.com/?size=30&id=99285&format=png 1x,https://img.icons8.com/?size=60&id=99285 format=png 2x"
+                        alt="Red Verified Badge"
+                        className="w-7 h-7 object-cover"
+                        style={{
+                          filter:
+                            "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
+                        }}
+                      />
+                    </div>
+                  )}
+                </span>
+              </h2>
+              {/* <p className="my-1 font-bold text-[rgba(34,34,34,0.5)] text-xs lg:my-2">
+              Guardian / Student ID: 405284
+            </p> */}
+              <button onClick={handleEditToggle} className="btn w-full my-4">
+                {isEditing ? "Cancel" : "Edit Information"}
+              </button>
+              {isEditing && (
+                <button onClick={handleSave} className="btn w-full ">
+                  Save Changes
+                </button>
+              )}
+            </div>
+            <div className="mb-2 mt-4 text-left block">
+              <p className="flex items-center gap-2 font-bold">
+                <Mail size={16} />
+                Email
+              </p>
+              <p className="ms-6 mt-1 text-sm font-semibold text-[rgba(34,34,34,0.5)] flex items-center gap-2">
+                {formData.email || "No data found"}
+                {user.emailVerified ? (
+                  <span className="badge  badge-success badge-outline badge-sm cursor-default select-none flex items-center gap-1">
+                    <CheckCircle size={14} />
+                    Verified
+                  </span>
+                ) : (
+                  <button
+                    onClick={openModal}
+                    className="badge badge-error badge-outline badge-sm cursor-pointer hover:bg-error-focus transition text-[8px] md:text-[12px] lg:text-[12px]"
+                    title="Click to verify email"
+                    disabled={isVerifying}>
+                    {isVerifying ? "Sending..." : "Not Verified"}
+                  </button>
+                )}
+              </p>
+            </div>
+
+            {/* Modal */}
+            {isModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-md p-6 max-w-sm w-full shadow-lg">
+                  <h3 className="text-lg font-semibold mb-4">
+                    Verify Your Email
+                  </h3>
+                  <p className="mb-6">
+                    Do you want to send a verification link to <br />
+                    <strong>{formData.email}</strong>?
+                  </p>
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={closeModal}
+                      className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition"
+                      disabled={isVerifying}>
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleVerifyEmail}
+                      className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+                      disabled={isVerifying}>
+                      {isVerifying ? "Sending..." : "Send Verification"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* <div className="mb-2 mt-4 text-left block">
             <p className="flex items-center gap-2 font-bold">
               <Mail size={16} />
               Email
@@ -373,24 +374,47 @@ const Profile = () => {
             </p>
           </div> */}
 
-          <div className="mb-2 mt-4 text-left block">
-            <p className="flex items-center gap-2 font-bold">
-              <Phone size={16} />
-              Phone Number
-            </p>
+            <div className="mb-2 mt-4 text-left block">
+              <p className="flex items-center gap-2 font-bold">
+                <Phone size={16} />
+                Phone Number
+              </p>
 
-            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {formData.phone || "No data found"}
-            </p>
+              <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+                {formData.phone || "No data found"}
+              </p>
+            </div>
+            <div className="mb-2 mt-4 text-left block">
+              <p className="flex items-center gap-2 font-bold">
+                <MapPin size={16} />
+                Address
+              </p>
+              <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
+                {formData.location || "No data found"},{" "}
+                {formData.city || "No data found"}
+              </p>
+            </div>
           </div>
-          <div className="mb-2 mt-4 text-left block">
-            <p className="flex items-center gap-2 font-bold">
-              <MapPin size={16} />
-              Address
-            </p>
-            <p className="ms-6 mt-1 text-sm  font-semibold text-[rgba(34,34,34,0.5)]">
-              {formData.location || "No data found"},{" "}
-              {formData.city || "No data found"}
+          <div className="rounded-xl bg-blue-50 border border-blue-200 shadow p-4">
+            <h3 className="text-lg font-semibold text-blue-800 flex items-center gap-2 mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-blue-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 
+               9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
+                />
+              </svg>
+              Tutor Note
+            </h3>
+            <p className="text-gray-700 whitespace-pre-wrap min-h-[60px]">
+              {formData?.adminNote}
             </p>
           </div>
         </div>
@@ -628,7 +652,7 @@ const Profile = () => {
                         className="w-full border-b border-black/50  focus:border-b-2 focus:outline-none"
                         type="text"
                         name="passingYear"
-                        placeholder="Enter your year of passing"
+                        placeholder="Enter your current year of study"
                       />
                     ) : (
                       <>

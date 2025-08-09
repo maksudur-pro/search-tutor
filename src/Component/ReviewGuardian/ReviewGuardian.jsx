@@ -64,22 +64,22 @@ const ReviewGuardian = () => {
           modules={[Autoplay, Pagination]}
           className="mySwiper">
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster1.jpg" alt="" />
+            <img src="/images/poster1.webp" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster2.jpg" alt="" />
+            <img src="/images/poster2.webp" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster1.jpg" alt="" />
+            <img src="/images/poster1.webp" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster2.jpg" alt="" />
+            <img src="/images/poster2.webp" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster1.jpg" alt="" />
+            <img src="/images/poster1.webp" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="https://searchtutorbd.com/imges/poster2.jpg" alt="" />
+            <img src="/images/poster2.webp" alt="" />
           </SwiperSlide>
         </Swiper>
       </div>

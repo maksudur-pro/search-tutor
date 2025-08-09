@@ -10,12 +10,26 @@ const AppliedCard = ({ user, jobId, app, handleStatusChange, updatingId }) => {
           <p className="text-sm text-gray-600 font-semibold">
             {user?.name || "Unknown Name"}
           </p>
-          {user.isVerified && (
+          {user.isVerified && !user.isRedVerified && (
             <div>
               <img
                 src="https://cdn-icons-png.flaticon.com/512/15050/15050690.png"
                 alt="verified"
                 className="w-5 h-5 object-cover"
+              />
+            </div>
+          )}
+          {user.isRedVerified && !user.isVerified && (
+            <div>
+              <img
+                src="https://img.icons8.com/?size=30&id=99285&format=png"
+                srcSet="https://img.icons8.com/?size=30&id=99285&format=png 1x,https://img.icons8.com/?size=60&id=99285 format=png 2x"
+                alt="Red Verified Badge"
+                className="w-7 h-7 object-cover"
+                style={{
+                  filter:
+                    "brightness(0) saturate(100%) invert(19%) sepia(89%) saturate(6975%) hue-rotate(1deg) brightness(95%) contrast(122%)",
+                }}
               />
             </div>
           )}

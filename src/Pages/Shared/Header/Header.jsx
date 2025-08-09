@@ -208,10 +208,10 @@ const Header = () => {
           <div className="mx-auto lg:max-w-[60rem] xl:max-w-[71.25rem] z-50">
             <div className="navbar ">
               <div className="flex-1">
-                <Link to={"/"}>
+                <Link to={"/"} name="home">
                   <img
                     className="w-36 md:w-[11.1rem]"
-                    src="https://searchtutorbd.com/imges/logo.png"
+                    src="/images/logo.webp"
                     alt=""
                   />
                 </Link>
