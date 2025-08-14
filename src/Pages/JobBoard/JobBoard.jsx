@@ -6,6 +6,7 @@ import cityOptions from "../../assets/cityOptions.json";
 import { AuthContext } from "../../providers/AuthProvider";
 import Pagination from "../../Component/Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const JobBoard = () => {
   const { userInfo } = useContext(AuthContext);
@@ -114,6 +115,41 @@ const JobBoard = () => {
       params.delete("city");
       params.set("page", "1");
       return params;
+    });
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This job will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axiosInstance.delete(`/jobs/${jobId}`);
+          setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+          setTotalJobs((prev) => prev - 1);
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "The job has been deleted.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } catch (error) {
+          console.error("Failed to delete job", error);
+          Swal.fire(
+            "Error!",
+            "Failed to delete job. Please try again.",
+            "error"
+          );
+        }
+      }
     });
   };
 
@@ -255,7 +291,12 @@ const JobBoard = () => {
           <div className="px-4 py-4 lg:py-8">
             <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-3">
               {jobs.map((job) => (
-                <TutorJobCard key={job._id} job={job} />
+                <TutorJobCard
+                  key={job._id}
+                  job={job}
+                  onDelete={handleDeleteJob}
+                  isAdmin={userInfo?.accountType === "admin"}
+                />
               ))}
             </div>
           </div>

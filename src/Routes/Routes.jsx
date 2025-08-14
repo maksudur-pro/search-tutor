@@ -20,6 +20,7 @@ import JobDetails from "../Pages/JobDetails/JobDetails";
 import Terms from "../Pages/terms/Terms";
 import ApplicationsDetails from "../Pages/Admin/ApplicationsDetails/ApplicationsDetails";
 import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
+import PaymentSystem from "../Pages/PaymentSystem/PaymentSystem";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: "/hire-tutor",
         element: <HireTutor />,
+      },
+      {
+        path: "/payment-system",
+        element: <PaymentSystem />,
       },
       {
         path: "/terms-condition",

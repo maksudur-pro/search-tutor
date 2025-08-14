@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
-import { Clock, Share, Share2 } from "lucide-react";
+import { Clock, Trash2, Share2 } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
 import JobPostTime from "../JobPostTime/JobPostTime";
 
-const TutorJobCard = ({ job }) => {
+const TutorJobCard = ({ job, onDelete, isAdmin }) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [hasApplied, setHasApplied] = useState(false);
@@ -343,12 +343,22 @@ const TutorJobCard = ({ job }) => {
                 {hasApplied ? "Already Applied" : "Apply"}
               </button>
             </Link>
-            <button
-              onClick={() => handleShare(job)}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium hover:bg-gray-100 py-2 h-8 px-3 text-sm text-gray-600 gap-1">
-              <Share2 size={15} className="me-1.5" />
-              Share
-            </button>
+            <div className="">
+              <button
+                onClick={() => handleShare(job)}
+                className="mr-2 inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium hover:bg-gray-100 py-2 h-8 px-3 text-sm text-gray-600 gap-1">
+                <Share2 size={15} className="me-1.5" />
+                Share
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => onDelete(job._id)}
+                  className=" text-red-500 hover:text-red-700 p-2 "
+                  title="Delete Job">
+                  <Trash2 size={18} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

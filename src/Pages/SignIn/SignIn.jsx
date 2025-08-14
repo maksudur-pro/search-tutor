@@ -40,7 +40,7 @@ const SignIn = () => {
             showConfirmButton: false,
           });
 
-          navigate("/profile");
+          navigate("/");
         } else {
           throw new Error("JWT token not received");
         }
